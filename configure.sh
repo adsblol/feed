@@ -129,17 +129,17 @@ ALTITUDE="$RECEIVERALTITUDE"
 UAT_INPUT="127.0.0.1:30978"
 
 RESULTS="--results beast,connect,127.0.0.1:30104"
-RESULTS2="--results basestation,listen,31009"
+RESULTS2="--results basestation,listen,31420"
 RESULTS3="--results beast,listen,30157"
-RESULTS4="--results beast,connect,127.0.0.1:30169"
+RESULTS4="--results beast,connect,127.0.0.1:30421"
 # add --privacy between the quotes below to disable having the feed name shown on the mlat map
 # (position is never shown accurately no matter the settings)
 PRIVACY=""
 INPUT_TYPE="$INPUT_TYPE"
 
 MLATSERVER="feed.adsb.lol:31090"
-TARGET="--net-connector feed.adsb.lol,30004,beast_reduce_out,feed.adsb.lol,64004"
-NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 30169 --net-bo-port 0 --net-ri-port 0 --write-json-every 1"
+TARGET="--net-connector feed.adsb.lol,30004,beast_reduce_out,feed.adsb.lol,1337"
+NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 31420 --net-bo-port 0 --net-ri-port 0 --write-json-every 1"
 JSON_OPTIONS="--max-range 450 --json-location-accuracy 2 --range-outline-hours 24"
 EOF
 
