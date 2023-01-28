@@ -29,8 +29,8 @@ feed.adsb.lol has address 142.132.241.63
 Expected Output:
 ```
 $ netstat -t -n | grep -E '30004|31090'
-tcp        0    182 localhost:43530     65.109.2.208:31090      ESTABLISHED
-tcp        0    410 localhost:47332     65.109.2.208:30004      ESTABLISHED
+tcp        0    182 localhost:43530     142.132.241.63:31090      ESTABLISHED
+tcp        0    410 localhost:47332     142.132.241.63:30004      ESTABLISHED
 ```
 
 ## 4: Optional: Install the stats package for an online map that shows only planes received by you:
