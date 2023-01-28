@@ -1,5 +1,5 @@
 #!/bin/bash
-SERVICE="/lib/systemd/system/adsbfi-mlat2.service"
+SERVICE="/lib/systemd/system/adsblol-mlat2.service"
 
 if [[ -z ${1} ]]; then
     echo --------------
@@ -9,17 +9,17 @@ fi
 
 cat >"$SERVICE" <<"EOF"
 [Unit]
-Description=adsbfi-mlat2
+Description=adsblol-mlat2
 Wants=network.target
 After=network.target
 
 [Service]
-User=adsbfi
-EnvironmentFile=/etc/default/adsbfi
-ExecStart=/usr/local/share/adsbfi/venv/bin/mlat-client \
+User=adsblol
+EnvironmentFile=/etc/default/adsblol
+ExecStart=/usr/local/share/adsblol/venv/bin/mlat-client \
     --input-type $INPUT_TYPE --no-udp \
     --input-connect $INPUT \
-    --server feed.adsb.fi:SERVERPORT \
+    --server feed.adsb.lol:SERVERPORT \
     --user $USER \
     --lat $LATITUDE \
     --lon $LONGITUDE \
@@ -32,7 +32,7 @@ Restart=always
 RestartSec=30
 StartLimitInterval=1
 StartLimitBurst=100
-SyslogIdentifier=adsbfi-mlat2
+SyslogIdentifier=adsblol-mlat2
 Nice=-1
 
 [Install]
@@ -40,7 +40,7 @@ WantedBy=default.target
 EOF
 
 if [[ -f /boot/adsb-config.txt ]]; then
-    sed -i -e 's#EnvironmentFile.*#EnvironmentFile=/boot/adsbfi-env\nEnvironmentFile=/boot/adsb-config.txt#' "$SERVICE"
+    sed -i -e 's#EnvironmentFile.*#EnvironmentFile=/boot/adsblol-env\nEnvironmentFile=/boot/adsb-config.txt#' "$SERVICE"
 fi
 
 sed -i -e "s/SERVERPORT/${1}/" "$SERVICE"
@@ -48,5 +48,5 @@ if [[ -n ${2} ]]; then
     sed -i -e "s/\$RESULTS/${2}/" "$SERVICE"
 fi
 
-systemctl enable adsbfi-mlat2
-systemctl restart adsbfi-mlat2
+systemctl enable adsblol-mlat2
+systemctl restart adsblol-mlat2

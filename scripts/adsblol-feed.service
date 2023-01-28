@@ -1,19 +1,19 @@
 
 [Unit]
-Description=adsbfi-mlat
+Description=adsblol-feed
 Wants=network.target
 After=network.target
 
 [Service]
-User=adsbfi
-RuntimeDirectory=adsbfi-mlat
-ExecStart=/usr/local/share/adsbfi/adsbfi-mlat.sh
+User=adsblol
+RuntimeDirectory=adsblol-feed
+ExecStart=/usr/local/share/adsblol/adsblol-feed.sh
 Type=simple
 Restart=always
 RestartSec=30
 StartLimitInterval=1
 StartLimitBurst=100
-SyslogIdentifier=adsbfi-mlat
+SyslogIdentifier=adsblol-feed
 Nice=-1
 
 [Install]

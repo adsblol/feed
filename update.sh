@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #####################################################################################
-#                        ADSB.fi SETUP SCRIPT                                       #
+#                        adsb.lol SETUP SCRIPT                                       #
 #####################################################################################
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                                   #
@@ -42,9 +42,9 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-if [ -f /boot/adsbfi-config.txt ]; then
+if [ -f /boot/adsblol-config.txt ]; then
     echo --------
-    echo "You are using the adsb.fi image, the feed setup script does not need to be installed."
+    echo "You are using the adsb.lol image, the feed setup script does not need to be installed."
     echo --------
     exit 1
 fi
@@ -95,10 +95,10 @@ function getGIT() {
     rm -rf "$tmp" "$tmp.folder"; return 1
 }
 
-REPO="https://github.com/d4rken/adsb-fi-scripts.git"
+REPO="https://github.com/adsblol/feed.git"
 BRANCH="master"
 
-IPATH=/usr/local/share/adsbfi
+IPATH=/usr/local/share/adsblol
 GIT="$IPATH/git"
 mkdir -p $IPATH
 
@@ -123,11 +123,11 @@ fi
 
 if [ -f /boot/adsb-config.txt ]; then
     source /boot/adsb-config.txt
-    source /boot/adsbfi-env
+    source /boot/adsblol-env
 else
-    source /etc/default/adsbfi
-    if ! grep -qs -e UAT_INPUT /etc/default/adsbfi; then
-        cat >> /etc/default/adsbfi <<"EOF"
+    source /etc/default/adsblol
+    if ! grep -qs -e UAT_INPUT /etc/default/adsblol; then
+        cat >> /etc/default/adsblol <<"EOF"
 
 # this is the source for 978 data, use port 30978 from dump978 --raw-port
 # if you're not receiving 978, don't worry about it, not doing any harm!
@@ -152,7 +152,7 @@ fi
 cp "$GIT/uninstall.sh" "$IPATH"
 cp "$GIT"/scripts/*.sh "$IPATH"
 
-UNAME=adsbfi
+UNAME=adsblol
 if ! id -u "${UNAME}" &>/dev/null
 then
     # 2nd syntax is for fedora / centos
@@ -179,17 +179,17 @@ echo
 bash "$IPATH/git/create-uuid.sh"
 
 VENV=$IPATH/venv
-if [[ -f /usr/local/share/adsbfi/venv/bin/python3.7 ]] && command -v python3.9 &>/dev/null;
+if [[ -f /usr/local/share/adsblol/venv/bin/python3.7 ]] && command -v python3.9 &>/dev/null;
 then
     rm -rf "$VENV"
 fi
 
 
 MLAT_REPO="https://github.com/makrsmark/mlat-client.git"
-MLAT_BRANCH="adsbfi"
+MLAT_BRANCH="adsblol"
 MLAT_VERSION="$(git ls-remote $MLAT_REPO $MLAT_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
 if [[ $REINSTALL != yes ]] && grep -e "$MLAT_VERSION" -qs $IPATH/mlat_version \
-    && grep -qs -e '#!' "$VENV/bin/mlat-client" && { systemctl is-active adsbfi-mlat &>/dev/null || [[ "${MLAT_DISABLED}" == "1" ]]; }
+    && grep -qs -e '#!' "$VENV/bin/mlat-client" && { systemctl is-active adsblol-mlat &>/dev/null || [[ "${MLAT_DISABLED}" == "1" ]]; }
 then
     echo
     echo "mlat-client already installed, git hash:"
@@ -230,39 +230,39 @@ else
         echo "--------------------"
         echo "Installing mlat-client failed, if there was an old version it has been restored."
         echo "Will continue installation to try and get at least the feed client working."
-        echo "Please repot this error to the adsbfi forums or discord."
+        echo "Please repot this error to the adsblol forums or discord."
         echo "--------------------"
     fi
 fi
 
 echo 50
 
-# copy adsbfi-mlat service file
-cp "$GIT"/scripts/adsbfi-mlat.service /lib/systemd/system
+# copy adsblol-mlat service file
+cp "$GIT"/scripts/adsblol-mlat.service /lib/systemd/system
 
 echo 60
 
-if ls -l /etc/systemd/system/adsbfi-mlat.service 2>&1 | grep '/dev/null' &>/dev/null; then
+if ls -l /etc/systemd/system/adsblol-mlat.service 2>&1 | grep '/dev/null' &>/dev/null; then
     echo "--------------------"
-    echo "CAUTION, adsbfi-mlat is masked and won't run!"
+    echo "CAUTION, adsblol-mlat is masked and won't run!"
     echo "If this is unexpected for you, please report this issue"
     echo "--------------------"
     sleep 3
 else
     if [[ "${MLAT_DISABLED}" == "1" ]]; then
-        systemctl disable adsbfi-mlat || true
-        systemctl stop adsbfi-mlat || true
+        systemctl disable adsblol-mlat || true
+        systemctl stop adsblol-mlat || true
     else
-        # Enable adsbfi-mlat service
-        systemctl enable adsbfi-mlat >> $LOGFILE || true
-        # Start or restart adsbfi-mlat service
-        systemctl restart adsbfi-mlat || true
+        # Enable adsblol-mlat service
+        systemctl enable adsblol-mlat >> $LOGFILE || true
+        # Start or restart adsblol-mlat service
+        systemctl restart adsblol-mlat || true
     fi
 fi
 
 echo 70
 
-# SETUP FEEDER TO SEND DUMP1090 DATA TO ADSB.fi
+# SETUP FEEDER TO SEND DUMP1090 DATA TO adsb.lol
 
 READSB_REPO="https://github.com/wiedehopf/readsb.git"
 READSB_BRANCH="master"
@@ -271,9 +271,9 @@ if grep -E 'wheezy|jessie' /etc/os-release -qs; then
 fi
 READSB_VERSION="$(git ls-remote $READSB_REPO $READSB_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
 READSB_GIT="$IPATH/readsb-git"
-READSB_BIN="$IPATH/feed-adsbfi"
+READSB_BIN="$IPATH/feed-adsblol"
 if [[ $REINSTALL != yes ]] && grep -e "$READSB_VERSION" -qs $IPATH/readsb_version \
-    && "$READSB_BIN" -V && systemctl is-active adsbfi-feed &>/dev/null
+    && "$READSB_BIN" -V && systemctl is-active adsblol-feed &>/dev/null
 then
     echo
     echo "Feed client already installed, git hash:"
@@ -306,19 +306,19 @@ fi
 
 #end compile readsb
 
-cp "$GIT"/scripts/adsbfi-feed.service /lib/systemd/system
+cp "$GIT"/scripts/adsblol-feed.service /lib/systemd/system
 
 echo 82
 
-if ! ls -l /etc/systemd/system/adsbfi-feed.service 2>&1 | grep '/dev/null' &>/dev/null; then
-    # Enable adsbfi-feed service
-    systemctl enable adsbfi-feed >> $LOGFILE || true
+if ! ls -l /etc/systemd/system/adsblol-feed.service 2>&1 | grep '/dev/null' &>/dev/null; then
+    # Enable adsblol-feed service
+    systemctl enable adsblol-feed >> $LOGFILE || true
     echo 92
-    # Start or restart adsbfi-feed service
-    systemctl restart adsbfi-feed || true
+    # Start or restart adsblol-feed service
+    systemctl restart adsblol-feed || true
 else
     echo "--------------------"
-    echo "CAUTION, adsbfi-feed.service is masked and won't run!"
+    echo "CAUTION, adsblol-feed.service is masked and won't run!"
     echo "If this is unexpected for you, please report this issue"
     echo "--------------------"
     sleep 3
@@ -326,32 +326,32 @@ fi
 
 echo 94
 
-systemctl is-active adsbfi-feed &>/dev/null || {
+systemctl is-active adsblol-feed &>/dev/null || {
     rm -f $IPATH/readsb_version
     echo "---------------------------------"
-    journalctl -u adsbfi-feed | tail -n10
+    journalctl -u adsblol-feed | tail -n10
     echo "---------------------------------"
-    echo "adsbfi-feed service couldn't be started, please report this error to the adsbfi forum or discord."
+    echo "adsblol-feed service couldn't be started, please report this error to the adsblol forum or discord."
     echo "Try an copy as much of the output above and include it in your report, thank you!"
     echo "---------------------------------"
     exit 1
 }
 
 echo 96
-[[ "${MLAT_DISABLED}" == "1" ]] || systemctl is-active adsbfi-mlat &>/dev/null || {
+[[ "${MLAT_DISABLED}" == "1" ]] || systemctl is-active adsblol-mlat &>/dev/null || {
     rm -f $IPATH/mlat_version
     echo "---------------------------------"
-    journalctl -u adsbfi-mlat | tail -n10
+    journalctl -u adsblol-mlat | tail -n10
     echo "---------------------------------"
-    echo "adsbfi-mlat service couldn't be started, please report this error to the adsb.fi discord."
+    echo "adsblol-mlat service couldn't be started, please report this error to the adsb.lol discord."
     echo "Try an copy as much of the output above and include it in your report, thank you!"
     echo "---------------------------------"
     exit 1
 }
 
 # Remove old method of starting the feed scripts if present from rc.local
-# Kill the old adsb.fi scripts in case they are still running from a previous install including spawned programs
-for name in adsbfi-netcat_maint.sh adsbfi-socat_maint.sh adsbfi-mlat_maint.sh; do
+# Kill the old adsb.lol scripts in case they are still running from a previous install including spawned programs
+for name in adsblol-netcat_maint.sh adsblol-socat_maint.sh adsblol-mlat_maint.sh; do
     if grep -qs -e "$name" /etc/rc.local; then
         sed -i -e "/$name/d" /etc/rc.local || true
     fi
@@ -361,13 +361,13 @@ for name in adsbfi-netcat_maint.sh adsbfi-socat_maint.sh adsbfi-mlat_maint.sh; d
     fi
 done
 
-# in case the mlat-client service using /etc/default/mlat-client as config is using adsb.fi as a host, disable the service
-if grep -qs 'SERVER_HOSTPORT.*feed.adsb.fi' /etc/default/mlat-client &>/dev/null; then
+# in case the mlat-client service using /etc/default/mlat-client as config is using adsb.lol as a host, disable the service
+if grep -qs 'SERVER_HOSTPORT.*feed.adsb.lol' /etc/default/mlat-client &>/dev/null; then
     systemctl disable --now mlat-client >> $LOGFILE 2>&1 || true
 fi
 
-if [[ -f /etc/default/adsbfi ]]; then
-    sed -i -e 's/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/feed.adsb.fi,30004,beast_reduce_out,feed.adsb.fi,64004/' /etc/default/adsbfi || true
+if [[ -f /etc/default/adsblol ]]; then
+    sed -i -e 's/feed.adsb.lol,30004,beast_reduce_out,feed.adsb.lol,64004/feed.adsb.lol,30004,beast_reduce_out,feed.adsb.lol,64004/' /etc/default/adsblol || true
 fi
 
 
@@ -387,7 +387,7 @@ Question? Issues? Go here:
 https://discord.gg/n9dGbkTtZm
 
 Webinterface to show the data transmitted? Run this command:
-sudo bash /usr/local/share/adsbfi/git/install-or-update-interface.sh
+sudo bash /usr/local/share/adsblol/git/install-or-update-interface.sh
 "
 
 INPUT_IP=$(echo $INPUT | cut -d: -f1)
@@ -421,10 +421,10 @@ https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-installation-for-readsb
 fi
 
 if ! timeout 5 nc -z "$INPUT_IP" "$INPUT_PORT" && command -v nc &>/dev/null; then
-    #whiptail --title "ADSB.fi Setup Script" --msgbox "$ENDTEXT2" 24 73
+    #whiptail --title "adsb.lol Setup Script" --msgbox "$ENDTEXT2" 24 73
     echo -e "$ENDTEXT2"
 else
     # Display the thank you message box.
-    #whiptail --title "ADSB.fi Setup Script" --msgbox "$ENDTEXT" 24 73
+    #whiptail --title "adsb.lol Setup Script" --msgbox "$ENDTEXT" 24 73
     echo -e "$ENDTEXT"
 fi
