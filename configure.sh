@@ -139,7 +139,7 @@ INPUT_TYPE="$INPUT_TYPE"
 
 MLATSERVER="feed.adsb.lol:31090"
 TARGET="--net-connector feed.adsb.lol,30004,beast_reduce_out,feed.adsb.lol,1337"
-NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 31420 --net-bo-port 0 --net-ri-port 0 --write-json-every 1"
+NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 31421 --net-bo-port 0 --net-ri-port 0 --write-json-every 1"
 JSON_OPTIONS="--max-range 450 --json-location-accuracy 2 --range-outline-hours 24"
 EOF
 
