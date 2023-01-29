@@ -113,7 +113,7 @@ fi
 
 other_hosts=$(whiptail --inputbox "example: feed.adsb.one:60004, feed.adsb.fi:30004\nPress enter to continue without feeding to other websites." 8 78 --title "Feed Other Aggregators" 3>&1 1>&2 2>&3)
 if [ $? -eq 0 ]; then
-  for i in $(echo $hosts | tr "," " "); do
+  for i in $(echo $other_hosts | tr "," " "); do
     host=$(echo $i | awk -F ":" '{print $1}')
     port=$(echo $i | awk -F ":" '{print $2}')
     TARGET="$TARGET --net-connector=$host,$port,beast_reduce_out"
