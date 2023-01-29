@@ -13,8 +13,8 @@ ADSB.lol is an [open source](https://github.com/adsblol/infra) ADSB+MLAT aggrega
 ## 2: Install the adsblol feed client
 
 ```
-curl -L -o /tmp/axfeed.sh https://raw.githubusercontent.com/adsblol/feed/master/install.sh
-sudo bash /tmp/axfeed.sh
+curl -L -o /tmp/LOLfeed.sh https://raw.githubusercontent.com/adsblol/feed/master/install.sh
+sudo bash /tmp/LOLfeed.sh
 ```
 
 ## 3: Check if your feed is working
@@ -37,15 +37,6 @@ tcp        0    182 localhost:43530     65.109.2.208:31090      ESTABLISHED
 tcp        0    410 localhost:47332     65.109.2.208:30004      ESTABLISHED
 ```
 
-## 4: Optional: Install the stats package for an online map that shows only planes received by you:
-
-```
-curl -L -o /tmp/axstats.sh https://raw.githubusercontent.com/adsblol/feed/master/stats.sh
-sudo bash /tmp/axstats.sh
-
-adsblol-showurl
-```
-
 ### Optional: local interface for your data http://192.168.X.XX/adsblol
 
 Install / Update:
@@ -60,8 +51,8 @@ sudo bash /usr/local/share/tar1090/uninstall.sh adsblol
 ### Update the feed client without reconfiguring
 
 ```
-curl -L -o /tmp/axupdate.sh https://raw.githubusercontent.com/adsblol/feed/master/update.sh
-sudo bash /tmp/axupdate.sh
+curl -L -o /tmp/LOLupdate.sh https://raw.githubusercontent.com/adsblol/feed/master/update.sh
+sudo bash /tmp/LOLupdate.sh
 ```
 
 
@@ -86,8 +77,8 @@ If the client is up to date it should not take as long as the original installat
 otherwise this will also update the client which will take a moment.
 
 ```
-curl -L -o /tmp/axfeed.sh https://raw.githubusercontent.com/adsblol/feed/master/install.sh
-sudo bash /tmp/axfeed.sh
+curl -L -o /tmp/LOLfeed.sh https://raw.githubusercontent.com/adsblol/feed/master/install.sh
+sudo bash /tmp/LOLfeed.sh
 ```
 
 ### Disable / Enable adsb.lol MLAT-results in your main decoder interface (readsb / dump1090-fa)
