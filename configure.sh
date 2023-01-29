@@ -111,7 +111,7 @@ if [[ $(hostname) == "radarcape" ]] || pgrep rcd &>/dev/null; then
     INPUT_TYPE="radarcape_gps"
 fi
 
-other_hosts=$(whiptail --inputbox "example: feed.adsb.one:60004, feed.adsb.fi:30004\nPress enter to continue without feeding to other websites." 8 78 --title "Feed Other Aggregators" 3>&1 1>&2 2>&3)
+other_hosts=$(whiptail --inputbox "example: feed.adsb.one:64004, feed.adsb.fi:30004\nPress enter to continue without feeding to other websites." 8 78 --title "Feed Other Aggregators" 3>&1 1>&2 2>&3)
 if [ $? -eq 0 ]; then
   for i in $(echo $other_hosts | tr "," " "); do
     host=$(echo $i | awk -F ":" '{print $1}')
