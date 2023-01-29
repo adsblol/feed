@@ -185,8 +185,8 @@ then
 fi
 
 
-MLAT_REPO="https://github.com/makrsmark/mlat-client.git"
-MLAT_BRANCH="adsblol"
+MLAT_REPO="https://github.com/adsblol/mlat-client.git"
+MLAT_BRANCH="master"
 MLAT_VERSION="$(git ls-remote $MLAT_REPO $MLAT_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
 if [[ $REINSTALL != yes ]] && grep -e "$MLAT_VERSION" -qs $IPATH/mlat_version \
     && grep -qs -e '#!' "$VENV/bin/mlat-client" && { systemctl is-active adsblol-mlat &>/dev/null || [[ "${MLAT_DISABLED}" == "1" ]]; }
