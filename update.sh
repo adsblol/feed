@@ -378,7 +378,7 @@ echo "---------------------"
 ## SETUP COMPLETE
 
 ENDTEXT="
-Thanks for choosing to share your data with ADS-B.FI!
+Thanks for choosing to share your data with ADSB.lol!
 
 Your feed should be active within 5 minutes, you can confirm by running the following command and looking for the IP address 65.109.2.208
 netstat -t -n | grep -E '30004|31090'
