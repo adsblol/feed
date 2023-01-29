@@ -221,7 +221,7 @@ else
       ;;
     "2")
       writeMlatService "adsb-fi"
-      writeMlatSh "adsb-fi" "adsb.fi:30105"
+      writeMlatSh "adsb-fi" "adsb.fi:31090"
       ;;
     esac
   done
