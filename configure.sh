@@ -120,7 +120,7 @@ After=network.target
 
 [Service]
 User=adsblol
-ExecStart=/usr/local/share/adsblol/adsblol-mlat-${1}.sh
+ExecStart=/usr/local/share/adsb-one/adsblol-mlat-${1}.sh
 Type=simple
 Restart=always
 RestartSec=30
