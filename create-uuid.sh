@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -f /boot/adsb-config.txt ]; then
+if [ -f /boot/adsblol-config.txt ]; then
     UUID_FILE="/boot/adsblol-uuid"
 else
     mkdir -p /usr/local/share/adsblol

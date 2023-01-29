@@ -121,8 +121,8 @@ if diff "$GIT/update.sh" "$IPATH/update.sh" &>/dev/null; then
     exit $?
 fi
 
-if [ -f /boot/adsb-config.txt ]; then
-    source /boot/adsb-config.txt
+if [ -f /boot/adsblol-config.txt ]; then
+    source /boot/adsblol-config.txt
     source /boot/adsblol-env
 else
     source /etc/default/adsblol
@@ -270,7 +270,7 @@ if grep -E 'wheezy|jessie' /etc/os-release -qs; then
     READSB_BRANCH="jessie"
 fi
 READSB_VERSION="$(git ls-remote $READSB_REPO $READSB_BRANCH | cut -f1 || echo $RANDOM-$RANDOM )"
-READSB_GIT="$IPATH/readsb-git"
+READSB_GIT="$IPATH/readsblol-git"
 READSB_BIN="$IPATH/feed-adsblol"
 if [[ $REINSTALL != yes ]] && grep -e "$READSB_VERSION" -qs $IPATH/readsb_version \
     && "$READSB_BIN" -V && systemctl is-active adsblol-feed &>/dev/null
@@ -407,7 +407,7 @@ This means you will need to install a stand-alone decoder so data are avaible on
 
 If you have the SDR connected to this device, we recommend using this script to install and configure a stand-alone decoder:
 
-https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-installation-for-readsb
+https://github.com/wiedehopf/adsblol-scripts/wiki/Automatic-installation-for-readsb
 ---------------------
 "
 else
@@ -415,7 +415,7 @@ else
 If you have connected an SDR but not yet installed an ADS-B decoder for it,
 we recommend this script:
 
-https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-installation-for-readsb
+https://github.com/wiedehopf/adsblol-scripts/wiki/Automatic-installation-for-readsb
 ---------------------
 "
 fi

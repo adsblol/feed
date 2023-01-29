@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if grep -qs -e 'LATITUDE' /boot/adsb-config.txt &>/dev/null && [[ -f /boot/adsblol-env ]]; then
-    source /boot/adsb-config.txt
+if grep -qs -e 'LATITUDE' /boot/adsblol-config.txt &>/dev/null && [[ -f /boot/adsblol-env ]]; then
+    source /boot/adsblol-config.txt
     source /boot/adsblol-env
 else
     source /etc/default/adsblol
