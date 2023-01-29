@@ -111,12 +111,119 @@ if [[ $(hostname) == "radarcape" ]] || pgrep rcd &>/dev/null; then
     INPUT_TYPE="radarcape_gps"
 fi
 
-other_hosts=$(whiptail --inputbox "example: feed.adsb.one:64004, feed.adsb.fi:30004\nPress enter to continue without feeding to other websites." 8 78 --title "Feed Other Aggregators" 3>&1 1>&2 2>&3)
-if [ $? -eq 0 ]; then
-  for i in $(echo $other_hosts | tr "," " "); do
+function writeMlatService() {
+tee /lib/systemd/system/adsblol-mlat-$1.service << EOF
+[Unit]
+Description=adsblol-mlat-${1}
+Wants=network.target
+After=network.target
+
+[Service]
+User=adsblol
+ExecStart=/usr/local/share/adsb-one/adsblol-mlat-${1}.sh
+Type=simple
+Restart=always
+RestartSec=30
+StartLimitInterval=1
+StartLimitBurst=100
+SyslogIdentifier=adsblol-mlat-${1}
+Nice=-1
+
+[Install]
+WantedBy=default.target
+
+EOF
+}
+
+function writeMlatSh() {
+INPUT_IP=$(echo $2 | cut -d: -f1)
+INPUT_PORT=$(echo $2 | cut -d: -f2)
+tee /usr/local/share/adsb-one/adsblol-mlat-$1.sh > /dev/null << EOF
+if grep -qs -e 'LATITUDE' /boot/adsblol-config.txt &>/dev/null && [[ -f /boot/adsblol-env ]]; then
+    source /boot/adsblol-config.txt
+    source /boot/adsblol-env
+else
+    source /etc/default/adsblol
+fi
+
+if [[ "$LATITUDE" == 0 ]] || [[ "$LONGITUDE" == 0 ]] || [[ "$USER" == 0 ]] || [[ "$USER" == "disable" ]]; then
+    echo MLAT DISABLED
+    sleep 3600
+    exit
+fi
+
+INPUT_IP=$INPUT_IP
+INPUT_PORT=$INPUT_PORT
+
+sleep 2
+
+while ! nc -z $INPUT_IP $INPUT_PORT && command -v nc &>/dev/null; do
+    echo "Could not connect to $INPUT_IP:$INPUT_PORT, retry in 10 seconds."
+    sleep 10
+done
+
+exec /usr/local/share/adsblol/venv/bin/mlat-client \
+    --input-type "$INPUT_TYPE" --no-udp \
+    --input-connect "$INPUT" \
+    --server "$2" \
+    --user "$USER" \
+    --lat "$LATITUDE" \
+    --lon "$LONGITUDE" \
+    --alt "$ALTITUDE" \
+    $PRIVACY \
+    $UUID_FILE \
+    $RESULTS $RESULTS1 $RESULTS2 $RESULTS3 $RESULTS4
+EOF
+}
+
+additional_feeds=$(whiptail --separate-output --checklist "Choose options" 10 35 5 \
+    --title "Select additional feeds" \
+    "1" "adsb.one" ON \
+    "2" "adsb.fi" ON 3>&1 1>&2 2>&3)
+if [ -z "$additional_feeds" ]; then
+  echo "No additional feeds selected"
+else
+  for feed in $additional_feeds; do
+    case "$feed" in
+    "1")
+      TARGET="$TARGET --net-connector=feed.adsb.one,30004,beast_reduce_out"
+      ;;
+    "2")
+      TARGET="$TARGET --net-connector=feed.adsb.fi,64004,beast_reduce_out"
+      ;;
+    esac
+  done
+fi
+
+custom_feeds=$(whiptail --inputbox "Enter custom feeder urls in a comma separated list of host:port.\nExample: feed.example.com:30005." 10 100 3>&1 1>&2 2>&3)
+if [ -z "$custom_feeds" ]; then
+  echo "No custom feeds selected"
+else
+  for i in $(echo $custom_feeds | tr "," " "); do
     host=$(echo $i | awk -F ":" '{print $1}')
     port=$(echo $i | awk -F ":" '{print $2}')
     TARGET="$TARGET --net-connector=$host,$port,beast_reduce_out"
+  done
+fi
+
+additional_mlat=$(whiptail --separate-output --checklist "Choose options" 10 35 5 \
+  --title "Select additional MLAT feeds" \
+  "1" "adsb.one" ON \
+  "2" "adsb.fi" ON 3>&1 1>&2 2>&3)
+if [ -z "$additional_mlat" ]; then
+  echo "No additional mlat feeds selected"
+else
+  for mlat in $additional_mlat; do
+    case "$mlat" in
+    "1")
+      writeMlatService "adsb-one"
+      writeMlatSh "adsb-one" "adsb.one:64006"
+      ;;
+    "2")
+      writeMlatService "adsb-fi"
+      writeMlatSh "adsb-fi" "adsb.fi:30105"
+      ;;
+    esac
   done
 fi
 
