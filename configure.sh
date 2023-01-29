@@ -111,6 +111,21 @@ if [[ $(hostname) == "radarcape" ]] || pgrep rcd &>/dev/null; then
     INPUT_TYPE="radarcape_gps"
 fi
 
+other_hosts=$(whiptail --inputbox "example: feed.adsb.one:60004, feed.adsb.fi:30004\nPress enter to continue without feeding to other websites." 8 78 --title "Feed Other Aggregators" 3>&1 1>&2 2>&3)
+if [ $? -eq 0 ]; then
+  for i in $(echo $hosts | tr "," " "); do
+    host=$(echo $i | awk -F ":" '{print $1}')
+    port=$(echo $i | awk -F ":" '{print $2}')
+
+    # check if the host is valid
+    if [[ $host =~ ^[a-zA-Z0-9.-]+$ ]]; then
+      TARGET="$TARGET --net-connector=$host,$port,beast_reduce_out"
+    else
+      whiptail --msgbox "Invalid host: $host" 10 60
+    fi
+  done
+fi
+
 tee /etc/default/adsblol >/dev/null <<EOF
 INPUT="$INPUT"
 REDUCE_INTERVAL="0.5"
@@ -138,7 +153,7 @@ PRIVACY=""
 INPUT_TYPE="$INPUT_TYPE"
 
 MLATSERVER="feed.adsb.lol:31090"
-TARGET="--net-connector feed.adsb.lol,30004,beast_reduce_out,feed.adsb.lol,1337"
+TARGET="$TARGET"
 NET_OPTIONS="--net-heartbeat 60 --net-ro-size 1280 --net-ro-interval 0.2 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 31421 --net-bo-port 0 --net-ri-port 0 --write-json-every 1"
 JSON_OPTIONS="--max-range 450 --json-location-accuracy 2 --range-outline-hours 24"
 EOF
