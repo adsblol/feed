@@ -17,7 +17,11 @@ curl -L -o /tmp/axfeed.sh https://raw.githubusercontent.com/adsblol/feed/master/
 sudo bash /tmp/axfeed.sh
 ```
 
-## 3: Check netstat to check if your feed is working
+## 3: Check if your feed is working
+
+That one's easy! Just go to <https://adsb.lol> and you should show as feeding.
+
+Want to make sure? You can get into looking at your connections..
 
 The feed IP for adsb.lol is currently 142.132.241.63
 
