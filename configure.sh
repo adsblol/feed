@@ -116,13 +116,7 @@ if [ $? -eq 0 ]; then
   for i in $(echo $hosts | tr "," " "); do
     host=$(echo $i | awk -F ":" '{print $1}')
     port=$(echo $i | awk -F ":" '{print $2}')
-
-    # check if the host is valid
-    if [[ $host =~ ^[a-zA-Z0-9.-]+$ ]]; then
-      TARGET="$TARGET --net-connector=$host,$port,beast_reduce_out"
-    else
-      whiptail --msgbox "Invalid host: $host" 10 60
-    fi
+    TARGET="$TARGET --net-connector=$host,$port,beast_reduce_out"
   done
 fi
 
