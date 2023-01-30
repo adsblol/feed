@@ -1,0 +1,251 @@
+# Enabled by default:
+# readsb
+# adsb_lol
+
+# Disabled by default
+# adsb_one, adsb_fi
+
+# Disabled by default, Requires environment variables
+# planewatch: PW_API_KEY (planewatch.com)
+# adsbhub: ADSBHUB_STATION_KEY (adsbhub.org)
+# opensky: OPENSKY_USERNAME, OPENSKY_SERIAL (opensky-network.org)
+# fr24: FR24_SHARING_KEY (flightradar24.com)
+# rbfeeder: RADARBOX_SHARING_KEY (radarbox24.com)
+# pfclient: PLANEFINDER_SHARECODE (planefinder.net)
+
+
+version: '3.8'
+
+volumes:
+  readsbpb_rrd:
+  readsbpb_autogain:
+
+services:
+  readsb:
+    image: ghcr.io/sdr-enthusiasts/docker-readsb-protobuf:latest
+    tty: true
+    container_name: readsb
+    hostname: readsb
+    restart: always
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    ports:
+      - 8080:8080
+    environment:
+      - TZ=${FEEDER_TZ}
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_RTLSDR_DEVICE=1090
+      - READSB_GAIN=autogain
+      - READSB_LAT=${FEEDER_LAT}
+      - READSB_LON=${FEEDER_LONG}
+      - READSB_RX_LOCATION_ACCURACY=2
+      - READSB_STATS_RANGE=true
+      - READSB_NET_ENABLE=true
+    volumes:
+      - readsbpb_rrd:/run/collectd
+      - readsbpb_autogain:/run/autogain
+    tmpfs:
+      - /run/readsb
+      - /var/log
+
+  adsb_lol:
+    image: ghcr.io/sdr-enthusiasts/docker-adsbexchange:latest_nohealthcheck
+    tty: true
+    container_name: adsb_lol
+    hostname: adsb_lol
+    restart: always
+    labels:
+    - "autoheal=true"
+    depends_on:
+    - readsb
+    environment:
+    - BEASTHOST=readsb
+    - LAT=${FEEDER_LAT}
+    - LONG=${FEEDER_LONG}
+    - ALT=${FEEDER_ALT_M}m
+    - SITENAME=${ADSBX_SITENAME}
+    - UUID=${ADSBX_UUID}
+    - TZ=${FEEDER_TZ}
+    - ADSB_FEED_DESTINATION_HOSTNAME=feed.adsb.lol 
+    - ADSB_FEED_DESTINATION_PORT=1337
+    - MLAT_FEED_DESTINATION_HOSTNAME=feed.adsb.lol
+    - MLAT_FEED_DESTINATION_PORT=1338
+    - ADSB_FEED_SECONDARY_DESTINATION_HOSTNAME=
+    - ADSB_FEED_SECONDARY_DESTINATION_PORT=
+    - STATS_DISABLE=1
+    tmpfs:
+    - /run:exec,size=64M,uid=1000,gid=1000
+    - /var/log
+
+  # adsb_one:
+  #   image: ghcr.io/sdr-enthusiasts/docker-adsbexchange:latest_nohealthcheck
+  #   tty: true
+  #   container_name: adsb_one
+  #   hostname: adsb_one
+  #   restart: always
+  #   labels:
+  #   - "autoheal=true"
+  #   depends_on:
+  #   - readsb
+  #   environment:
+  #   - BEASTHOST=readsb
+  #   - LAT=${FEEDER_LAT}
+  #   - LONG=${FEEDER_LONG}
+  #   - ALT=${FEEDER_ALT_M}m
+  #   - SITENAME=${ADSBX_SITENAME}
+  #   - UUID=${ADSBX_UUID}
+  #   - TZ=${FEEDER_TZ}
+  #   - ADSB_FEED_DESTINATION_HOSTNAME=feed.adsb.one
+  #   - ADSB_FEED_DESTINATION_PORT=64004
+  #   - MLAT_FEED_DESTINATION_HOSTNAME=feed.adsb.one
+  #   - MLAT_FEED_DESTINATION_PORT=64006
+  #   - ADSB_FEED_SECONDARY_DESTINATION_HOSTNAME=
+  #   - ADSB_FEED_SECONDARY_DESTINATION_PORT=
+  #   - STATS_DISABLE=1
+  #   tmpfs:
+  #   - /run:exec,size=64M,uid=1000,gid=1000
+  #   - /var/log
+
+  # adsb_fi:
+  #   image: ghcr.io/sdr-enthusiasts/docker-adsbexchange:latest_nohealthcheck
+  #   tty: true
+  #   container_name: adsb_fi
+  #   hostname: adsb_fi
+  #   restart: always
+  #   labels:
+  #   - "autoheal=true"
+  #   depends_on:
+  #   - readsb
+  #   environment:
+  #   - BEASTHOST=readsb
+  #   - LAT=${FEEDER_LAT}
+  #   - LONG=${FEEDER_LONG}
+  #   - ALT=${FEEDER_ALT_M}m
+  #   - SITENAME=${ADSBX_SITENAME}
+  #   - UUID=${ADSBX_UUID}
+  #   - TZ=${FEEDER_TZ}
+  #   - ADSB_FEED_DESTINATION_HOSTNAME=feed.adsb.fi
+  #   - ADSB_FEED_DESTINATION_PORT=30004
+  #   - MLAT_FEED_DESTINATION_HOSTNAME=feed.adsb.fi
+  #   - MLAT_FEED_DESTINATION_PORT=31090
+  #   - ADSB_FEED_SECONDARY_DESTINATION_HOSTNAME=
+  #   - ADSB_FEED_SECONDARY_DESTINATION_PORT=
+  #   - STATS_DISABLE=1
+  #   tmpfs:
+  #   - /run:exec,size=64M,uid=1000,gid=1000
+  #   - /var/log
+
+
+  # piaware:
+  #   image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
+  #   tty: true
+  #   container_name: piaware
+  #   restart: always
+  #   depends_on:
+  #     - readsb
+  #   ports:
+  #     - 8081:8080
+  #   environment:
+  #     - BEASTHOST=readsb
+  #     - LAT=${FEEDER_LAT}
+  #     - LONG=${FEEDER_LONG}
+  #     - TZ=${FEEDER_TZ}
+  #     - FEEDER_ID=${PIAWARE_FEEDER_ID}
+  #   tmpfs:
+  #     - /run:exec,size=64M
+  #     - /var/log
+
+  # fr24:
+  #   image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
+  #   tty: true
+  #   container_name: fr24
+  #   restart: always
+  #   depends_on:
+  #     - readsb
+  #   ports:
+  #     - 8754:8754
+  #   environment:
+  #     - BEASTHOST=readsb
+  #     - TZ=${FEEDER_TZ}
+  #     - FR24KEY=${FR24_SHARING_KEY}
+  #   tmpfs:
+  #     - /var/log
+
+  # rbfeeder:
+  #   image: ghcr.io/sdr-enthusiasts/docker-radarbox:latest
+  #   tty: true
+  #   container_name: rbfeeder
+  #   restart: always
+  #   depends_on:
+  #     - readsb
+  #   environment:
+  #     - BEASTHOST=readsb
+  #     - LAT=${FEEDER_LAT}
+  #     - LONG=${FEEDER_LONG}
+  #     - ALT=${FEEDER_ALT_M}
+  #     - TZ=${FEEDER_TZ}
+  #     - SHARING_KEY=${RADARBOX_SHARING_KEY}
+  #   tmpfs:
+  #     - /run:exec,size=64M
+  #     - /var/log
+
+  # pfclient:
+  #   image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest
+  #   tty: true
+  #   container_name: pfclient
+  #   restart: always
+  #   ports:
+  #     - 30053:30053
+  #   environment:
+  #     - TZ=${FEEDER_TZ}
+  #     - BEASTHOST=readsb
+  #     - LAT=${FEEDER_LAT}
+  #     - LONG=${FEEDER_LONG}
+  #     - SHARECODE=${PLANEFINDER_SHARECODE}
+  #   tmpfs:
+  #     - /run:exec,size=64M
+  #     - /var/log/pfclient
+  # planewatch:
+  #   image: ghcr.io/plane-watch/docker-plane-watch:latest
+  #   tty: true
+  #   container_name: planewatch
+  #   restart: always
+  #   depends_on:
+  #     - readsb
+  #   environment:
+  #     - BEASTHOST=readsb
+  #     - LAT=${FEEDER_LAT}
+  #     - LONG=${FEEDER_LONG}
+  #     - ALT=${FEEDER_ALT_M}m
+  #     - TZ=${FEEDER_TZ}
+  #     - API_KEY=${PW_API_KEY}
+  #   tmpfs:
+  #     - /run:exec,size=64M
+  #     - /var/log
+
+  # adsbhub:
+  #   image: ghcr.io/sdr-enthusiasts/docker-adsbhub:latest
+  #   tty: true
+  #   container_name: adsbhub
+  #   restart: always
+  #   environment:
+  #     - TZ=${FEEDER_TZ}
+  #     - SBSHOST=readsb
+  #     - CLIENTKEY=${ADSBHUB_STATION_KEY}
+  # opensky:
+  #   image: ghcr.io/sdr-enthusiasts/docker-opensky-network:latest
+  #   tty: true
+  #   container_name: opensky
+  #   restart: always
+  #   environment:
+  #     - TZ=${FEEDER_TZ}
+  #     - BEASTHOST=readsb
+  #     - LAT=${FEEDER_LAT}
+  #     - LONG=${FEEDER_LONG}
+  #     - ALT=${FEEDER_ALT_M}
+  #     - OPENSKY_USERNAME=${OPENSKY_USERNAME}
+  #     - OPENSKY_SERIAL=${OPENSKY_SERIAL}
+  #   tmpfs:
+  #     - /run:exec,size=64M
+  #     - /var/log
+

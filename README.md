@@ -1,6 +1,23 @@
 # adsb.lol feed client
 ## ADSB.lol is an [open source](https://github.com/adsblol/infra) ADSB+MLAT aggregator.
 
+Would you like to set up Docker? [Take a look at the SDR-Enthusiasts GitBook](https://sdr-enthusiasts.gitbook.io/ads-b/setting-up-the-host-system/install-docker) for installing Docker, then use the [`docker-compose.yaml`](docker-compose.yaml) in this repository at the [project environment stage.](https://sdr-enthusiasts.gitbook.io/ads-b/foundations/prepare-the-project-environment)
+
+The included docker-compose is preconfigured with [sdr-enthusiasts](https://github.com/sdr-enthusiasts/) images.
+
+The included docker-compose talks to adsb.lol (ADSB+MLAT) by default, but supports:
+
+    - adsb.one (ADSB+MLAT)
+    - adsb.fi (ADSB+MLAT)
+    - piaware 
+    - flightradar24 
+    - radarbox 
+    - planefinder 
+    - planewatch
+    - adsbhub
+    - opensky
+
+## Enough with the Docker, show me the BASH!
 
 - These scripts aid in setting up your current ADS-B receiver to feed adsb.lol and others!
 - They will not disrupt any existing feed clients already present
