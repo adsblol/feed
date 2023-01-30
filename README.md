@@ -17,7 +17,11 @@ The included docker-compose talks to adsb.lol (ADSB+MLAT) by default, but suppor
     - adsbhub
     - opensky
 
+
 ## Enough with the Docker, show me the BASH!
+
+**Proceed at your own caution. While the scripts below are known to work, there might be pitfalls and unforeseen issues. Docker is recommended.**
+
 
 - These scripts aid in setting up your current ADS-B receiver to feed adsb.lol and others!
 - They will not disrupt any existing feed clients already present
