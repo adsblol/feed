@@ -5,7 +5,7 @@ Would you like to set up Docker? [Take a look at the SDR-Enthusiasts GitBook](ht
 
 The included docker-compose is preconfigured with [sdr-enthusiasts](https://github.com/sdr-enthusiasts/) images.
 
-The included docker-compose talks to adsb.lol (ADSB+MLAT) by default, but supports:
+The included docker-compose talks to adsb.lol (ADSB+MLAT) by default, but supports (by uncommenting the lines):
 
     - adsb.one (ADSB+MLAT)
     - adsb.fi (ADSB+MLAT)
