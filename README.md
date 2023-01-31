@@ -7,16 +7,18 @@ The included docker-compose is preconfigured with [sdr-enthusiasts](https://gith
 
 The included docker-compose talks to adsb.lol (ADSB+MLAT) by default, but supports (by uncommenting the lines):
 
-    - adsb.one (ADSB+MLAT)
-    - adsb.fi (ADSB+MLAT)
-    - piaware 
-    - flightradar24 
-    - radarbox 
-    - planefinder 
-    - planewatch
-    - adsbhub
-    - opensky
+- adsb.one (ADSB+MLAT)
+- theairtraffic.com (ADSB, MLAT is not yet supported by the website.)
+- adsb.fi (ADSB+MLAT)
+- piaware 
+- flightradar24 
+- radarbox 
+- planefinder 
+- planewatch
+- adsbhub
+- opensky
 
+To ensure your docker-compose stack is always up, a little utility such as [dcsg - docker compose service generator](https://github.com/andreaskoch/dcsg) can come in handy.
 
 ## Enough with the Docker, show me the BASH!
 
