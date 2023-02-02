@@ -1,0 +1,95 @@
+#!/bin/bash
+set -ex
+# This script should be setup on a Debian-like system
+# This script is idempotent.
+# It can be run multiple times without causing any issues.
+
+# Check if we are debian
+if [ ! -f /etc/debian_version ]; then
+    echo "This script is only for Debian-like systems"
+    exit 1
+fi
+REQS="jq runc bridge-utils rtl-sdr iptables"
+# Check if we have REQ, if not, install them
+for REQ in $REQS; do
+    if ! dpkg -s $REQ >/dev/null 2>&1; then
+        apt-get install -y $REQ || apt-get update && apt-get install -y $REQ
+    fi
+done
+
+# SDR
+curl -sL -o /etc/udev/rules.d/rtl-sdr.rules https://raw.githubusercontent.com/wiedehopf/adsb-scripts/master/osmocom-rtl-sdr.rules
+BLOCKED_MODULES="rtl2832 dvb_usb_rtl28xxu rtl2832_sdr rtl8xxxu rtl2838"
+for module in BLOCKED_MODULES;
+do
+    if grep -q $module /etc/modprobe.d/blacklist.conf; then
+        echo "Module $module already blacklisted"
+    else
+        echo "blacklist $module" >> /etc/modprobe.d/blacklist.conf
+        rmmod $module || true
+    fi
+done
+
+# Install containerd
+# Get latest containerd/containerd release
+ARCH=$(uname -m)
+
+# If arm7l
+# If $(which containerd) is not empty
+if [ ! -z $(which containerd) ]; then
+    echo "containerd already installed"
+else
+    if [ "$ARCH" = "armv7l" ]; then
+        curl -L "https://github.com/alexellis/containerd-arm/releases/download/v1.6.8/containerd-1.6.8-linux-armhf.tar.gz" | tar xvz -C /usr/local/bin
+    else
+        CONTAINERD_VERSION=$(curl -s https://api.github.com/repos/containerd/containerd/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
+        curl -L "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
+
+        mkdir -p /opt/cni/bin /etc/cni/net.d
+        curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm-v1.2.0.tgz | tar xvz -C /opt/cni/bin
+        echo '{"cniVersion":"0.3.1","type":"loopback"}' > /etc/cni/net.d/99-loopback.conf
+        chmod +x /usr/local/bin/containerd
+
+        # Add containerd systemd service
+        curl -L "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service" -o /etc/systemd/system/containerd.service
+        systemctl daemon-reload
+        systemctl enable --now containerd
+
+    fi
+fi
+
+# Get yq
+if [ ! -z $(which yq) ]; then
+    echo "yq already installed"
+else
+    ARCH=$(uname -m | sed 's/arm7l/arm/')
+    VERSION=v4.30.8
+    wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_${ARCH}.tar.gz -O - | tar xvz -C /usr/local/bin
+    mv /usr/local/bin/yq_linux_* /usr/local/bin/yq
+    chmod +x /usr/local/bin/yq
+fi
+
+# Install nerdctl (docker compatible CLI)
+if [ ! -z $(which nerdctl) ]; then
+    echo "nerdctl already installed"
+else
+    NERDCTL_VERSION=$(curl -s https://api.github.com/repos/containerd/nerdctl/releases/latest | grep tag_name | cut -d '"' -f 4| cut -d 'v' -f 2)
+    ARCH=$(uname -m| sed 's/arm7l/arm/')
+    curl -L "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
+fi
+
+#mkdirs
+mkdir -p /opt/adsblol/data/readsb/collectd \
+    /opt/adsblol/data/readsb/autogain \
+    /opt/adsblol/data/dump978/autogain \
+    /opt/adsblol/data/tar1090/globe_history \
+    /opt/adsblol/data/tar1090/timelapse1090 \
+    /opt/adsblol/data/planefence/config \
+    /opt/adsblol/data/planefence/html \
+    /opt/adsblol/data/rtlsdr-airband \
+    /opt/adsblol/data/acarshub \
+    /opt/adsblol/data/webproxy \
+    /opt/adsblol/data/vnstat
+
+# Find the stick in /dev/bus/usb
+STICK=

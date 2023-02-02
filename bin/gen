@@ -1,0 +1,25 @@
+#!/bin/bash
+set -ex
+# FIXME https://github.com/containerd/nerdctl/issues/1831
+# This script reads services.txt
+# default-docker-compose.yaml has all the services
+# If the service has a matching field in its profiles section, it will be Carried Over
+
+# Generate header of docker-compose.yaml
+cat << EOF > docker-compose.yaml
+version: "3.8"
+services: {}
+EOF
+
+
+SERVICES=$(cat services.txt|grep -v "^#")
+for service in $SERVICES
+do
+    yq ".services.$service *= load(\"default-docker-compose.yaml\").services.$service" docker-compose.yaml > docker-compose.yaml.tmp
+    mv docker-compose.yaml.tmp docker-compose.yaml
+done
+
+RTL_PATH="/dev/bus/usb/$(lsusb | grep RTL | cut -d' ' -f2)/$(lsusb | grep RTL | cut -d' ' -f4 | cut -d':' -f1)"
+
+# Replace /dev/usb/001/003 with $RTL_PATH
+sed -i "s|/dev/bus/usb/001/002|$RTL_PATH|g" docker-compose.yaml

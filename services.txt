@@ -1,0 +1,31 @@
+adsblol
+readsb
+tar1090
+
+#dump978
+#piaware
+#fr24
+#pfclient
+#rbfeeder
+#radarvirtuel
+#planewatch
+#adsbhub
+
+#mlathub
+
+#airband
+#acarsdec
+#dumpvdl2
+#acars_router
+#acarshub
+
+#autoheal
+#watchtower
+#vnstat
+#webproxy
+# WebProxy translates unfriendly URLs like http://x.x.x.x:8091 into friendly URLs like http://x.x.x.x/acarshub
+# Webproxy is running kx1t/webproxy:dev, listening on ports 80 and 443.
+#planefence
+# Planefence logs aircraft in "fence" near your station, displayed on website/CSV files, sends Tweets and soon to measure noise levels.
+#screenshot
+# Planefence needs the screenshot service.
