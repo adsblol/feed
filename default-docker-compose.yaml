@@ -104,7 +104,7 @@ services:
       - READSB_NET_ENABLE=true
       - READSB_NET_ONLY=true
       - READSB_FORWARD_MLAT=true
-      - READSB_NET_CONNECTOR=multifeeder,39000,beast_in
+      - READSB_NET_CONNECTOR=adsblol,39000,beast_in
       # or multifeeder,39000,beast_in;multifeeder,39001,beast_in;multifeeder,39002,beast_in
       #- READSB_NET_CONNECTOR=piaware,30105,beast_in;rbfeeder,30105,beast_in;radarvirtuel,30105,beast_in;multifeeder,39000,beast_in;multifeeder,39001,beast_in;multifeeder,39002,beast_in
       - READSB_NET_BEAST_OUTPUT_PORT=30105
