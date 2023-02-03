@@ -13,7 +13,10 @@ REQS="jq runc bridge-utils rtl-sdr iptables"
 # Check if we have REQ, if not, install them
 for REQ in $REQS; do
     if ! dpkg -s $REQ >/dev/null 2>&1; then
+        echo "[debug] installing $REQ"
         apt-get install -y $REQ || apt-get update && apt-get install -y $REQ
+    else
+        echo "[debug] $REQ already installed"
     fi
 done
 
@@ -23,39 +26,44 @@ BLOCKED_MODULES="rtl2832 dvb_usb_rtl28xxu rtl2832_sdr rtl8xxxu rtl2838"
 for module in BLOCKED_MODULES;
 do
     if grep -q $module /etc/modprobe.d/blacklist.conf; then
-        echo "Module $module already blacklisted"
+        echo "[debug] $module already blacklisted"
     else
         echo "blacklist $module" >> /etc/modprobe.d/blacklist.conf
         rmmod $module || true
+        echo "[debug] $module blacklisted"
     fi
 done
 
 # Install containerd
 # Get latest containerd/containerd release
 ARCH=$(uname -m)
-
-# If arm7l
-# If $(which containerd) is not empty
 if [ ! -z $(which containerd) ]; then
-    echo "containerd already installed"
+    echo "[debug] containerd already installed"
 else
+    echo "[debug] installing containerd"
     # If arch is armv7l or arm7l
     if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "arm7l" ]; then
         curl -L "https://github.com/alexellis/containerd-arm/releases/download/v1.6.8/containerd-1.6.8-linux-armhf.tar.gz" | tar xvz -C /usr/local/bin
     else
         CONTAINERD_VERSION=$(curl -s https://api.github.com/repos/containerd/containerd/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
         curl -L "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
-
-        mkdir -p /opt/cni/bin /etc/cni/net.d
-        curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm-v1.2.0.tgz | tar xvz -C /opt/cni/bin
-        echo '{"cniVersion":"0.3.1","type":"loopback"}' > /etc/cni/net.d/99-loopback.conf
-        chmod +x /usr/local/bin/containerd
-
-        # Add containerd systemd service
-        curl -L "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service" -o /etc/systemd/system/containerd.service
-        systemctl daemon-reload
-        systemctl enable --now containerd
-
+    fi
+    chmod +x /usr/local/bin/containerd
+fi
+# If /etc/systemd/system/containerd.service does not exist
+if [ ! -f /etc/systemd/system/containerd.service ]; then
+    echo "[debug] installing containerd.service"
+    curl -L "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service" -o /etc/systemd/system/containerd.service
+    systemctl daemon-reload
+else
+    echo "containerd.service already exists"
+    systemctl enable --now containerd
+# Install CNI
+if [ ! -d /opt/cni/bin ] || [ ! -f /etc/cni/net.d/99-loopback.conf ]; then
+    echo "[debug] installing CNI"
+    mkdir -p /opt/cni/bin /etc/cni/net.d
+    curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm-v1.2.0.tgz | tar xvz -C /opt/cni/bin
+    echo '{"cniVersion":"0.3.1","type":"loopback"}' > /etc/cni/net.d/99-loopback.conf
     fi
 fi
 
@@ -63,6 +71,7 @@ fi
 if [ ! -z $(which yq) ]; then
     echo "yq already installed"
 else
+    echo "[debug] installing yq"
     ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/')
     VERSION=v4.30.8
     wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_${ARCH}.tar.gz -O - | tar xvz -C /usr/local/bin
@@ -91,6 +100,3 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
     /opt/adsblol/data/acarshub \
     /opt/adsblol/data/webproxy \
     /opt/adsblol/data/vnstat
-
-# Find the stick in /dev/bus/usb
-STICK=
