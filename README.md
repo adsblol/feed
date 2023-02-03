@@ -12,16 +12,40 @@ By default, the client will feed to adsb.lol.
 
 To see the current list of supported aggregators, see the [services.txt](services.txt) file.
 
+If you have an issue with the feed client, please [paste.ee](https://paste.ee) your error logs join our chat on [matrix](https://matrix.to/#/#adsblol:gatto.club) or [discord](https://adsb.lol/discord).
+
+## Installation
+
+1. You should be root during this process. You can switch user to root with `sudo su`.
+
+2. First, ensure your system is up to date.
 ```
 apt-get update
 apt-get upgrade
+```
 
+3. Then, clone this repository.
+
+```
 mkdir /opt/adsblol
 git clone https://github.com/adsblol/feed /opt/adsblol
 cd /opt/adsblol
+```
+
+4. Install dependencies.
+
+```
 bin/adsblol-init
-nano .env # Adjust .env fileads
-bin/adsblol-gen; nerdctl compose rm -f; nerdctl compose up -d
+```
+
+5. Configure the environment variables
+```
+nano .env
+```
+
+6. Generate the config and run
+```
+bin/gen; nerdctl compose rm -f; nerdctl compose up -d
 ```
 
 We are up!
