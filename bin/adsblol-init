@@ -75,7 +75,7 @@ if [ ! -z $(which nerdctl) ]; then
     echo "nerdctl already installed"
 else
     NERDCTL_VERSION=$(curl -s https://api.github.com/repos/containerd/nerdctl/releases/latest | grep tag_name | cut -d '"' -f 4| cut -d 'v' -f 2)
-    ARCH=$(uname -m| sed 's/arm7l/arm/' | sed 's/armv7l/arm/')
+    ARCH=$(uname -m| sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/^arm$/arm-v7/')
     curl -L "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
 fi
 
