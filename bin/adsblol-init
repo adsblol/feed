@@ -102,3 +102,5 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
     /opt/adsblol/data/acarshub \
     /opt/adsblol/data/webproxy \
     /opt/adsblol/data/vnstat
+
+systemctl enable --now containerd || true
