@@ -39,7 +39,8 @@ ARCH=$(uname -m)
 if [ ! -z $(which containerd) ]; then
     echo "containerd already installed"
 else
-    if [ "$ARCH" = "armv7l" ]; then
+    # If arch is armv7l or arm7l
+    if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "arm7l" ]; then
         curl -L "https://github.com/alexellis/containerd-arm/releases/download/v1.6.8/containerd-1.6.8-linux-armhf.tar.gz" | tar xvz -C /usr/local/bin
     else
         CONTAINERD_VERSION=$(curl -s https://api.github.com/repos/containerd/containerd/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
@@ -62,7 +63,7 @@ fi
 if [ ! -z $(which yq) ]; then
     echo "yq already installed"
 else
-    ARCH=$(uname -m | sed 's/arm7l/arm/')
+    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/')
     VERSION=v4.30.8
     wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_${ARCH}.tar.gz -O - | tar xvz -C /usr/local/bin
     mv /usr/local/bin/yq_linux_* /usr/local/bin/yq
@@ -74,7 +75,7 @@ if [ ! -z $(which nerdctl) ]; then
     echo "nerdctl already installed"
 else
     NERDCTL_VERSION=$(curl -s https://api.github.com/repos/containerd/nerdctl/releases/latest | grep tag_name | cut -d '"' -f 4| cut -d 'v' -f 2)
-    ARCH=$(uname -m| sed 's/arm7l/arm/')
+    ARCH=$(uname -m| sed 's/arm7l/arm/' | sed 's/armv7l/arm/')
     curl -L "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
 fi
 
