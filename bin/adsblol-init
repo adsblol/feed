@@ -55,9 +55,11 @@ if [ ! -f /etc/systemd/system/containerd.service ]; then
     echo "[debug] installing containerd.service"
     curl -L "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service" -o /etc/systemd/system/containerd.service
     systemctl daemon-reload
+    systemctl enable --now containerd
 else
     echo "containerd.service already exists"
-    systemctl enable --now containerd
+fi
+
 # Install CNI
 if [ ! -d /opt/cni/bin ] || [ ! -f /etc/cni/net.d/99-loopback.conf ]; then
     echo "[debug] installing CNI"
