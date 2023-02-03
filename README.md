@@ -82,3 +82,7 @@ Then, run `bin/gen` to generate the new config, `nerdctl compose rm -f` to remov
 - `nerdctl logs readsb` - readsb logs
 - `nerdctl logs adsblol` - adsblol logs
 - `nerdctl logs tar1090` - mlat logs
+
+### Reset repo
+- `git fetch --all` - fetch latest commits
+- `git reset --hard origin/hard` - reset to latest commit
