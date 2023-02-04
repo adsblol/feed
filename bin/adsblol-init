@@ -113,3 +113,12 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
 
 chmod +x /usr/local/bin/containerd || true
 systemctl enable --now containerd || true
+
+# Add ourselves to /usr/local/bin
+if [ ! -f /usr/local/bin/adsblol-init ]; then
+    ln -s /opt/adsblol/bin/adsblol-init /usr/local/bin/adsblol-init
+fi
+
+if [ ! -f /usr/local/bin/adsblol-gen ]; then
+    ln -s /opt/adsblol/bin/adsblol-gen /usr/local/bin/adsblol-gen
+fi

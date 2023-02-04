@@ -24,28 +24,20 @@ apt-get update
 apt-get upgrade
 ```
 
-3. Then, clone this repository.
+3. Then, run adsblol-init.
 
 ```
-mkdir /opt/adsblol
-git clone https://github.com/adsblol/feed /opt/adsblol
-cd /opt/adsblol
+bash <(curl -Ls https://raw.githack.com/adsblol/feed/main/bin/adsblol-init)
 ```
 
-4. Install dependencies.
-
+5. Configure the environment variables in /opt/adsblol/.env
 ```
-bin/adsblol-init
-```
-
-5. Configure the environment variables
-```
-nano .env
+nano /opt/adsblol/.env
 ```
 
-6. Generate the config and run
+6. Generate the docker-compose.yaml, and start the containers.
 ```
-bin/gen; nerdctl compose rm -f; nerdctl compose up -d
+adsblol-gen && adsblol-up
 ```
 
 We are up!
