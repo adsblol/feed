@@ -49,12 +49,12 @@ else
         CONTAINERD_VERSION=$(curl -s https://api.github.com/repos/containerd/containerd/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
         curl -L "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
     fi
-    chmod +x /usr/local/bin/containerd
 fi
 # If /etc/systemd/system/containerd.service does not exist
 if [ ! -f /etc/systemd/system/containerd.service ]; then
     echo "[debug] installing containerd.service"
     curl -L "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service" -o /etc/systemd/system/containerd.service
+    chmod +x /usr/local/bin/containerd
     systemctl daemon-reload
     systemctl enable --now containerd
 else
@@ -106,4 +106,5 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
     /opt/adsblol/data/webproxy \
     /opt/adsblol/data/vnstat
 
+chmod +x /usr/local/bin/containerd || true
 systemctl enable --now containerd || true
