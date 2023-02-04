@@ -45,8 +45,7 @@ services:
       - READSB_NET_SBS_OUTPUT_PORT=30003
       - READSB_NET_BEAST_OUTPUT_PORT=30005
       - READSB_NET_RAW_OUTPUT_PORT=30002
-      # or
-      #- READSB_NET_CONNECTOR=dump978,37981,raw_in;mlathub,30105,beast_in
+      - READSB_NET_CONNECTOR=dump978,37981,raw_in;mlathub,30105,beast_in
       - READSB_NET_BEAST_REDUCE_OUT_PORT=30105
       - READSB_GRAPH_MAX_MESSAGES_LINE=1
       - READSB_GRAPH_ALL_LARGE=yes
@@ -73,7 +72,7 @@ services:
       - /dev/bus/usb:/dev/bus/usb
     environment:
       - TZ=${FEEDER_TZ}
-      - READSB_RTLSDR_DEVICE=${ADSB_DONGLE_SERIAL}
+      - READSB_RTLSDR_DEVICE=${DUMP978_DONGLE_SERIAL}
       - READSB_RTLSDR_PPM=${ADSB_DONGLE_PPM}
       - READSB_GAIN=${ADSB_DONGLE_GAIN}
       - DUMP978_RTLSDR_DEVICE=${UAT_DONGLE_SERIAL}
@@ -105,9 +104,7 @@ services:
       - READSB_NET_ENABLE=true
       - READSB_NET_ONLY=true
       - READSB_FORWARD_MLAT=true
-      - READSB_NET_CONNECTOR=adsblol,39000,beast_in
-      # or multifeeder,39000,beast_in;multifeeder,39001,beast_in;multifeeder,39002,beast_in
-      #- READSB_NET_CONNECTOR=piaware,30105,beast_in;rbfeeder,30105,beast_in;radarvirtuel,30105,beast_in;multifeeder,39000,beast_in;multifeeder,39001,beast_in;multifeeder,39002,beast_in
+      - READSB_NET_CONNECTOR=${MLATHUB_NET_CONNECTOR}
       - READSB_NET_BEAST_OUTPUT_PORT=30105
     tmpfs:
       - /run/readsb
@@ -136,8 +133,8 @@ services:
     restart: always
     environment:
       - TZ=${FEEDER_TZ}
-      - READSB_NET_CONNECTOR=readsb,30105,beast_in;feed.adsb.lol,30004,beast_out
-      - MLAT_CONFIG=feed.adsb.lol,1338,39000
+      - READSB_NET_CONNECTOR=readsb,30105,beast_in;${ADSBLOL_NET_CONNECTOR}
+      - MLAT_CONFIG=${ADSBLOL_MLAT_CONFIG}
       - MLAT_USER=${MLAT_SITE_NAME}
       - READSB_LAT=${FEEDER_LAT}
       - READSB_LON=${FEEDER_LONG}
