@@ -67,3 +67,13 @@ function check_for_required_files(){
         fi
     done
 }
+
+function run_checks(){
+    check_for_docker
+    check_containerd_running
+    check_docker_running
+    check_for_sdr
+    check_for_required_env_vars
+    check_for_required_files
+}
+run_checks
