@@ -43,9 +43,9 @@ adsblol-gen && adsblol-up
 
 We are up!
 
-See http://IP:8080/ to confirm that tar1090 is working.
+See http://IP:8080/ to confirm that readsb is working, http://IP:8082/ to confirm that the adsblol multifeeder is working.
 
-See https://adsb.lol to see that you are feeding.
+See https://adsb.lol to confirm that you are feeding.
 
 Does it take a while to show up? [You can ask in our Discord for assistance.](https://adsb.lol/discord)
 
