@@ -87,6 +87,7 @@ if [ ! -z $(which crun) ]; then
 else
     echo "[debug] installing crun"
     ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+    ARCH=$(echo $ARCH | sed 's/arm/armhf/')
     wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux-${ARCH}" -O /usr/local/bin/crun
     chmod +x /usr/local/bin/crun
 fi
