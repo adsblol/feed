@@ -14,7 +14,7 @@ REQS="git jq bridge-utils rtl-sdr iptables"
 for REQ in $REQS; do
     if ! dpkg -s $REQ >/dev/null 2>&1; then
         echo "[debug] installing $REQ"
-        apt-get install -y $REQ || apt-get update && apt-get install -y $REQ
+        apt-get install -y $REQ
     else
         echo "[debug] $REQ already installed"
     fi
