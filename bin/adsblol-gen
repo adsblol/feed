@@ -21,11 +21,4 @@ do
 done
 
 # Get the RTLSDRs so we can put them in docker-compose.yaml as devices using this format
-# /dev/bus/usb/001/002
-RTLSDRS=$(lsusb|grep RTL|awk '{print $2":"$4}')
-for RTLSDR in $RTLSDRS
-do
-    yq ".services.readsb.devices += [\"/dev/bus/usb/$RTLSDR\"]" docker-compose.yaml > docker-compose.yaml.tmp
-    yq ".services.dump978.devices += [\"/dev/bus/usb/$RTLSDR\"]" docker-compose.yaml > docker-compose.yaml.tmp
-    mv docker-compose.yaml.tmp docker-compose.yaml
-done
+# /dev/adsblol1, /dev/adsblol2, etc
