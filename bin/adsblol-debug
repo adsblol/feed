@@ -38,18 +38,17 @@ function check_for_required_env_vars(){
         "READSB_NET_CONNECTOR" "MLATHUB_NET_CONNECTOR"
         "ADSBLOL_NET_CONNECTOR" "ADSBLOL_MLAT_CONFIG"
     )
-    for env_var in "${REQUIRED_ENV_VARS[@]}"
+    for var in "${REQUIRED_ENV_VARS[@]}"
     do
-        # Check if it is set, non empty (and uncommented) on /opt/adsblol/.env
-        if ! grep -q "^$env_var=" /opt/adsblol/.env | grep -q -v "^#"
-        then
-            echo "[ fail] $env_var is commented out in /opt/adsblol/.env"
-        elif ! grep -q "^$env_var=" /opt/adsblol/.env
-        then
-            echo "[ fail] $env_var is not set in /opt/adsblol/.env"
-        elif [ -z "$(grep "^$env_var=" /opt/adsblol/.env | cut -d "=" -f 2)" ]
-        then
-            echo "[ fail] $env_var is empty in /opt/adsblol/.env"
+        # Check if the variable is missing from /opt/adsblol/.env
+        if ! grep -q "^$var=" /opt/adsblol/.env; then
+            echo "[ fail] $var is missing in /opt/adsblol/.env"
+        # Check if it there, but commented out
+        elif grep -q "^#$var=" /opt/adsblol/.env; then
+            echo "[ fail] $var is commented out in /opt/adsblol/.env"
+        # Check if it is there, but empty
+        elif grep -q "^$var=$" /opt/adsblol/.env; then
+            echo "[ fail] $var is empty in /opt/adsblol/.env"
         fi
     done
 }
