@@ -9,7 +9,7 @@ if [ ! -f /etc/debian_version ]; then
     echo "This script is only for Debian-like systems"
     exit 1
 fi
-REQS="git jq runc bridge-utils rtl-sdr iptables"
+REQS="git jq bridge-utils rtl-sdr iptables"
 # Check if we have REQ, if not, install them
 for REQ in $REQS; do
     if ! dpkg -s $REQ >/dev/null 2>&1; then
@@ -19,6 +19,12 @@ for REQ in $REQS; do
         echo "[debug] $REQ already installed"
     fi
 done
+
+# Ensure runc is not installed
+if [ -f $(which runc) ]; then
+    echo "[debug] removing runc"
+    apt-get remove -y runc || true
+fi
 
 # If /opt/adsblol does not exist, we create it
 if [ ! -d /opt/adsblol ]; then
