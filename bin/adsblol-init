@@ -45,9 +45,24 @@ do
     fi
 done
 
+# Install crun
+if [ ! -z $(which /usr/bin/crun) ]; then
+    echo "crun already installed"
+else
+    echo "[debug] installing crun"
+    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+    ARCH=$(echo $ARCH | sed 's/arm/armhf/')
+    if [ "$ARCH" = "armhf" ]; then
+        wget "https://raw.githubusercontent.com/katlol/arm32/main/bin/crun" -O /usr/bin/crun
+    else
+        wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux.${ARCH}" -O /usr/bin/crun
+    fi
+    chmod +x /usr/bin/crun
+fi
+
 # Install docker
 # If it is already installed, we do nothing
-if [ ! -z $(which docker) ]; then
+if [ ! -z $(which /usr/bin/docker) ]; then
     echo "docker already installed. Skipping"
 else
     echo "[debug] installing docker"
@@ -56,19 +71,28 @@ else
     ARCH=$(echo $ARCH | sed 's/arm/armhf/')
     URL="https://download.docker.com/linux/static/stable/$ARCH/docker-23.0.0.tgz"
     wget $URL -O - | tar xvz -C $TMPDIR
-    mv $TMPDIR/docker/* /usr/local/bin
+    mv $TMPDIR/docker/* /usr/bin
+    rm -rf $TMPDIR
+    # Add docker group
+    groupadd docker || true
+    usermod -aG docker $USER
 
     # Create default docker config
     mkdir -p /etc/docker
     cat << EOF > /etc/docker/daemon.json
 {
-    "runtime": "runc",
+    "default-runtime": "crun",
+    "runtimes": {
+        "crun": {
+            "path": "/usr/bin/crun"
+        }
+    },
     "log-driver": "json-file",
     "log-opts": {
         "max-size": "10m",
         "max-file": "3"
     },
-    "storage-driver": "overlay2",
+    "storage-driver": "overlay2"
 }
 EOF
 
@@ -83,22 +107,17 @@ EOF
     systemctl daemon-reload
     systemctl enable docker
     systemctl start docker
-    rm -rf $TMPDIR
 fi
-
-# Install crun
-if [ ! -z $(which crun) ]; then
-    echo "crun already installed"
+# Install docker-compose
+if [ ! -z $(which /usr/local/bin/docker-compose) ]; then
+    echo "docker-compose already installed. Skipping"
 else
-    echo "[debug] installing crun"
+    echo "[debug] installing docker-compose"
     ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    ARCH=$(echo $ARCH | sed 's/arm/armhf/')
-    if [ "$ARCH" = "armhf" ]; then
-        wget "https://raw.githubusercontent.com/katlol/arm32/main/bin/crun" -O /usr/local/bin/crun
-    else
-        wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux.${ARCH}" -O /usr/local/bin/crun
-    fi
-    chmod +x /usr/local/bin/crun
+    ARCH=$(echo $ARCH | sed 's/arm/armv7/')
+    URL="https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-linux-$ARCH"
+    wget $URL -O /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
 fi
 
 #mkdirs

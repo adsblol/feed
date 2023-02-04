@@ -1,17 +1,17 @@
 #!/bin/bash
-set -ex
+set -e
 # This script reads services.txt
 # It generates a docker compose up command enabling all the services that are not commented out
 
 cd /opt/adsblol
-DOCKER_COMPOSE_CMD="docker compose up -d"
+DOCKER_COMPOSE_CMD="docker-compose"
 SERVICES=$(cat services.txt|grep -v "^#")
 for service in $SERVICES
 do
-    DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD $service"
+    DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD --profile $service"
 done
+DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD up -d"
 
-set +ex
 echo "I have made a docker compose command for you, enabling what you have selected in services.txt."
 echo $DOCKER_COMPOSE_CMD
 echo "It is also been saved to /opt/adsblol/cmdline.txt"
