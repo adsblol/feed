@@ -27,7 +27,7 @@ apt-get upgrade
 3. Then, run adsblol-init.
 
 ```
-bash <(curl -Ls https://raw.githack.com/adsblol/feed/main/bin/adsblol-init)
+bash <(curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init)
 ```
 
 5. Configure the environment variables in /opt/adsblol/.env
