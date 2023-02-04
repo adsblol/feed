@@ -89,6 +89,7 @@ else
     ARCH=$(echo $ARCH | sed 's/arm/armhf/')
     RUNC_VERSION=$(curl -s https://api.github.com/repos/opencontainers/runc/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
     curl -L "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
+fi
 
 # Get yq
 if [ ! -z $(which yq) ]; then
