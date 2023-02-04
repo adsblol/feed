@@ -70,7 +70,7 @@ else
     if [ "$ARCH" = "armhf" ]; then
         wget "https://raw.githubusercontent.com/katlol/arm32/main/bin/crun" -O /usr/bin/crun
     else
-        wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux.${ARCH}" -O /usr/bin/crun
+        wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux-${ARCH}" -O /usr/bin/crun
     fi
     chmod +x /usr/bin/crun
 fi
