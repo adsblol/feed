@@ -4,13 +4,13 @@ set -e
 # It generates a docker compose up command enabling all the services that are not commented out
 
 cd /opt/adsblol
-DOCKER_COMPOSE_CMD="docker-compose"
+DOCKER_COMPOSE_CMD=""
 SERVICES=$(cat services.txt|grep -v "^#")
 for service in $SERVICES
 do
     DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD --profile $service"
 done
-DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD up -d"
+DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD"
 
 echo "I have made a docker compose command for you, enabling what you have selected in services.txt."
 echo $DOCKER_COMPOSE_CMD

@@ -14,10 +14,11 @@ fi
 CMD=$(cat /opt/adsblol/cmdline.txt)
 
 echo "Removing old docker stack if it exists"
-docker-compose rm -f || true
+docker-compose $CMD rm -f || true
+
 
 echo "Running docker-compose up with /opt/adsblol/cmdline.txt"
-exec $CMD
+exec docker-compose $CMD up -d
 
 echo "Attaching to logs... You can Ctrl-C to exit"
-docker-compose logs -f
+docker-compose $CMD logs -f
