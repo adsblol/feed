@@ -32,10 +32,11 @@ bash <(curl -Ls https://raw.githack.com/adsblol/feed/main/bin/adsblol-init)
 
 5. Configure the environment variables in /opt/adsblol/.env
 ```
+cp /opt/adsblol/.env.example /opt/adsblol/.env
 nano /opt/adsblol/.env
 ```
 
-6. Generate the docker-compose.yaml, and start the containers.
+6. Generate the configuration, and start the containers.
 ```
 adsblol-gen && adsblol-up
 ```

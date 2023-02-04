@@ -18,7 +18,7 @@ echo "It is also been saved to /opt/adsblol/cmdline.txt"
 echo $DOCKER_COMPOSE_CMD > /opt/adsblol/cmdline.txt
 echo "This command will be used by adsblol-up"
 echo "You can run this command now, or run adsblol-up to run it automatically"
-echo
+
 
 # Get the RTLSDRs so we can put them in docker-compose.yaml as devices using this format
 # /dev/adsblol1, /dev/adsblol2, etc
