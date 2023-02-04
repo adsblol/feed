@@ -23,7 +23,7 @@ services:
     labels:
       - "autoheal=true"
     devices:
-      - /dev/bus/usb/001/002
+      - /dev/bus/usb:/dev/bus/usb
     ports:
       - 8080:8080
       - 30002:30002
@@ -70,7 +70,7 @@ services:
     labels:
       - "autoheal=true"
     devices:
-      - /dev/bus/usb
+      - /dev/bus/usb:/dev/bus/usb
     environment:
       - TZ=${FEEDER_TZ}
       - READSB_RTLSDR_DEVICE=${ADSB_DONGLE_SERIAL}
