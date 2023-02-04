@@ -103,6 +103,8 @@ EOF
 
     # get containerd service
     wget https://raw.githubusercontent.com/containerd/containerd/master/containerd.service -O /etc/systemd/system/containerd.service
+    # Replace /usr/local/bin/containerd with /usr/bin/containerd
+    sed -i 's|/usr/local/bin/containerd|/usr/bin/containerd|g' /etc/systemd/system/containerd.service
     systemctl daemon-reload
     systemctl enable containerd
     systemctl start containerd
