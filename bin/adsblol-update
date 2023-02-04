@@ -3,3 +3,4 @@ set -ex
 cd /opt/adsblol
 git fetch --all
 git pull --ff-only
+adsblol-init
