@@ -55,8 +55,7 @@ if [ ! -z $(which /usr/bin/crun) ]; then
     echo "crun already installed"
 else
     echo "[debug] installing crun"
-    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    ARCH=$(echo $ARCH | sed 's/arm/armhf/')
+    ARCH=$(uname -m | sed 's/arm7l/armhf/' | sed 's/armv7l/armhf/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
     if [ "$ARCH" = "armhf" ]; then
         wget "https://raw.githubusercontent.com/katlol/arm32/main/bin/crun" -O /usr/bin/crun
     else
@@ -72,8 +71,7 @@ if [ ! -z $(which /usr/bin/docker) ]; then
 else
     echo "[debug] installing docker"
     TMPDIR=$(mktemp -d)
-    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    ARCH=$(echo $ARCH | sed 's/arm/armhf/')
+    ARCH=$(uname -m | sed 's/arm7l/armhf/' | sed 's/armv7l/armhf/' | sed 's/arm64/aarch64/')
     URL="https://download.docker.com/linux/static/stable/$ARCH/docker-23.0.0.tgz"
     wget $URL -O - | tar xvz -C $TMPDIR
     mv $TMPDIR/docker/* /usr/bin
@@ -120,8 +118,7 @@ if [ ! -z $(which /usr/local/bin/docker-compose) ]; then
     echo "docker-compose already installed. Skipping"
 else
     echo "[debug] installing docker-compose"
-    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    ARCH=$(echo $ARCH | sed 's/arm/armv7/')
+    ARCH=$(uname -m | sed 's/arm7l/armv7/' | sed 's/armv7l/armv7/' | sed 's/arm64/aarch64/')
     URL="https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-linux-$ARCH"
     wget $URL -O /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
