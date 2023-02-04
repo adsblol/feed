@@ -3,4 +3,4 @@ set -ex
 cd /opt/adsblol
 CMD=$(cat /opt/adsblol/cmdline.txt)
 echo "Attaching to logs... You can Ctrl-C to exit"
-docker-compose $CMD logs -f
+docker-compose $CMD logs $@

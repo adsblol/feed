@@ -76,3 +76,4 @@ Once you have done this, run `adsblol-up` to start the containers.
 
 ### Logs
 - `adsblol-logs` - view logs
+- `adsblol-logs -f` - view logs and follow
