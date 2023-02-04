@@ -9,7 +9,7 @@ if [ ! -f /etc/debian_version ]; then
     echo "This script is only for Debian-like systems"
     exit 1
 fi
-REQS="jq runc bridge-utils rtl-sdr iptables"
+REQS="git jq runc bridge-utils rtl-sdr iptables"
 # Check if we have REQ, if not, install them
 for REQ in $REQS; do
     if ! dpkg -s $REQ >/dev/null 2>&1; then
@@ -19,6 +19,12 @@ for REQ in $REQS; do
         echo "[debug] $REQ already installed"
     fi
 done
+
+# If /opt/adsblol does not exist, we create it
+if [ ! -d /opt/adsblol ]; then
+    echo "[debug] creating /opt/adsblol"
+    git clone https://github.com/adsblol/feed /opt/adsblol
+fi
 
 # SDR
 curl -sL -o /etc/udev/rules.d/rtl-sdr.rules https://raw.githubusercontent.com/wiedehopf/adsb-scripts/master/osmocom-rtl-sdr.rules
@@ -68,7 +74,6 @@ if [ ! -d /opt/cni/bin ] || [ ! -f /etc/cni/net.d/99-loopback.conf ]; then
     ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
     curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-${ARCH}-v1.2.0.tgz | tar xvz -C /opt/cni/bin
     echo '{"cniVersion":"0.3.1","type":"loopback"}' > /etc/cni/net.d/99-loopback.conf
-    fi
 fi
 
 # Get yq
