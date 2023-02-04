@@ -20,7 +20,12 @@ do
     mv docker-compose.yaml.tmp docker-compose.yaml
 done
 
-RTL_PATH="/dev/bus/usb/$(lsusb | grep RTL | cut -d' ' -f2)/$(lsusb | grep RTL | cut -d' ' -f4 | cut -d':' -f1)"
-
-# Replace /dev/usb/001/003 with $RTL_PATH
-sed -i "s|/dev/bus/usb/001/002|$RTL_PATH|g" docker-compose.yaml
+# Get the RTLSDRs so we can put them in docker-compose.yaml as devices using this format
+# /dev/bus/usb/001/002
+RTLSDRS=$(lsusb|grep RTL|awk '{print $2":"$4}')
+for RTLSDR in $RTLSDRS
+do
+    yq ".services.readsb.devices += [\"/dev/bus/usb/$RTLSDR\"]" docker-compose.yaml > docker-compose.yaml.tmp
+    yq ".services.dump978.devices += [\"/dev/bus/usb/$RTLSDR\"]" docker-compose.yaml > docker-compose.yaml.tmp
+    mv docker-compose.yaml.tmp docker-compose.yaml
+done
