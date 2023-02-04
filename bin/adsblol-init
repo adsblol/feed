@@ -138,22 +138,10 @@ systemctl enable --now containerd || true
 systemctl enable --now docker || true
 
 # Add ourselves to /usr/local/bin
-if [ ! -f /usr/local/bin/adsblol-init ]; then
-    ln -s /opt/adsblol/bin/adsblol-init /usr/local/bin/adsblol-init
-fi
-
-if [ ! -f /usr/local/bin/adsblol-gen ]; then
-    ln -s /opt/adsblol/bin/adsblol-gen /usr/local/bin/adsblol-gen
-fi
-
-if [ ! -f /usr/local/bin/adsblol-up ]; then
-    ln -s /opt/adsblol/bin/adsblol-up /usr/local/bin/adsblol-up
-fi
-
-if [ ! -f /usr/local/bin/adsblol-update ]; then
-    ln -s /opt/adsblol/bin/adsblol-up /usr/local/bin/adsblol-update
-fi
-
-if [ ! -f /usr/local/bin/adsblol-sdrserial ]; then
-    ln -s /opt/adsblol/bin/adsblol-up /usr/local/bin/adsblol-sdrserial
-fi
+FILES=$(ls /opt/adsblol/bin)
+for file in $FILES; do
+    if [ ! -f /usr/local/bin/$file || $(readlink /usr/local/bin/$file) != "/opt/adsblol/bin/$file" ]; then
+        rm -f /usr/local/bin/$file || true
+        ln -s /opt/adsblol/bin/$file /usr/local/bin/$file
+    fi
+done
