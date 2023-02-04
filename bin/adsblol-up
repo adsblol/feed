@@ -1,0 +1,9 @@
+#!/bin/bash
+set -ex
+systemctl start containerd || true
+
+cd /opt/adsblol
+nerdctl compose rm -f
+nerdctl compose up -d
+sleep 2
+nerdctl ps
