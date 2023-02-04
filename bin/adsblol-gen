@@ -6,6 +6,7 @@ set -ex
 # If the service has a matching field in its profiles section, it will be Carried Over
 
 # Generate header of docker-compose.yaml
+cd /opt/adsblol
 cat << EOF > docker-compose.yaml
 version: "3.8"
 services: {}
