@@ -20,10 +20,12 @@ for REQ in $REQS; do
     fi
 done
 
-# Ensure runc is not installed
-if [ -f $(which runc) ]; then
-    echo "[debug] removing runc"
-    apt-get remove -y runc || true
+# remove dpkg
+if ! dpkg -s dpkg >/dev/null 2>&1; then
+    echo "[debug] dpkg already removed"
+else
+    echo "[debug] removing dpkg"
+    apt-get remove -y dpkg
 fi
 
 # If /opt/adsblol does not exist, we create it
