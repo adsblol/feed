@@ -14,12 +14,17 @@ REQS="git jq bridge-utils rtl-sdr iptables"
 for REQ in $REQS; do
     if ! dpkg -s $REQ >/dev/null 2>&1; then
         echo "[debug] installing $REQ"
-        apt-get install -y $REQ
+        apt-get install -y $REQ --no-install-recommends
     else
         echo "[debug] $REQ already installed"
     fi
 done
 
+# Check if a reboot is pending due to kernel updates
+if [ -f /var/run/reboot-required || -f /run/reboot-required ]; then
+    echo "A reboot is required. Please reboot and run this script again"
+    exit 1
+fi
 
 # If /opt/adsblol does not exist, we create it
 if [ ! -d /opt/adsblol ]; then
