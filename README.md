@@ -53,7 +53,7 @@ Does it take a while to show up? [You can ask in our Discord for assistance.](ht
 
 The feed client can be configured to feed to other aggregators.
 
-For other community aggregators such as adsb.one, edit these lines in the `docker-compose.yml` file:
+For other community aggregators such as adsb.one, edit these lines in the `docker-compose.yaml` file:
 
 ```
     environment:
@@ -67,15 +67,12 @@ To do this, open the `services.txt` file and enable the aggregator by uncommenti
 
 You may have to define further environment variables in the `.env` file.
 
-Then, run `bin/gen` to generate the new config, `nerdctl compose rm -f` to remove the old containers, and `nerdctl compose up -d` to start the new containers.
+Then, run `adsblol-gen` to generate a new cmdline.txt.
+The cmdline.txt is used by the adsblol binaries to know what services to start.
+
+Once you have done this, run `adsblol-up` to start the containers.
 
 ## Troubleshooting
 
 ### Logs
-- `nerdctl logs readsb` - readsb logs
-- `nerdctl logs adsblol` - adsblol logs
-- `nerdctl logs tar1090` - mlat logs
-
-### Reset repo
-- `git fetch --all` - fetch latest commits
-- `git reset --hard origin/hard` - reset to latest commit
+- `adsblol-logs` - view logs
