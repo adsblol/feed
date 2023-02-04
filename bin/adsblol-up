@@ -4,6 +4,6 @@ systemctl start containerd || true
 
 cd /opt/adsblol
 nerdctl compose rm -f
-nerdctl compose up -d
+nerdctl --runtime=/usr/local/bin/crun compose up -d
 sleep 2
 nerdctl ps
