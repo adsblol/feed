@@ -9,6 +9,13 @@ if [ ! -f /etc/debian_version ]; then
     echo "This script is only for Debian-like systems"
     exit 1
 fi
+
+# Check if running as root
+if [ ! $(id -u) = 0 ]; then
+    echo "This script should be run as root. It will not work if not run as root"
+    exit 1
+fi
+
 REQS="git jq bridge-utils rtl-sdr iptables"
 # Check if we have REQ, if not, install them
 for REQ in $REQS; do
