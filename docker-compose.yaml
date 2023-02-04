@@ -1,9 +1,8 @@
-version: '3.8'
 # Thanks to SDR-Enthusiasts for the base docker-compose.yml file
 # See: https://github.com/sdr-enthusiasts/docker-install/blob/main/sample-docker-compose.yml
-# License:
+# License: MIT
 # This file is based on the above.
-
+version: '3.8'
 services:
 ######################################################################################################################################
 # ADS-B/UAT Data Processing Services. These containers read data from dongles and/or other containers and decode or process this data.

@@ -1,9 +1,25 @@
+# adsblol/feed
+# -----
+# Required containers
+# -----
 adsblol
 readsb
-tar1090
 mlathub
+tar1090
 
+# -----
+# Maintenance containers
+# -----
+autoheal
+watchtower
+vnstat
+
+
+# 978Hz UAT
 #dump978
+
+# Commercial feeders
+
 #piaware
 #fr24
 #pfclient
@@ -19,9 +35,6 @@ mlathub
 #acars_router
 #acarshub
 
-#autoheal
-#watchtower
-#vnstat
 #webproxy
 # WebProxy translates unfriendly URLs like http://x.x.x.x:8091 into friendly URLs like http://x.x.x.x/acarshub
 # Webproxy is running kx1t/webproxy:dev, listening on ports 80 and 443.

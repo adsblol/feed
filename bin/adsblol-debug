@@ -7,20 +7,40 @@ function check_for_docker() {
     if ! command -v docker &> /dev/null
     then
         echo "[ fail] Docker could not be found. Please install docker."
+        echo "[ run] adsblol-init"
+        return 1
     fi
 }
 
 function check_containerd_running() {
     if ! systemctl is-active --quiet containerd
     then
-        echo "[ fail] Containerd is not running. Please start containerd."
+        echo "[ fail] Containerd is not running. Trying to start containerd..."
+        echo "[>run] systemctl start containerd"
+        systemctl stop containerd || true
+        systemctl start containerd
+        # Check if it is now running
+        if ! systemctl is-active --quiet containerd
+        then
+            echo "[ fail] Containerd is still not running. Please start containerd."
+            return 1
+        fi
     fi
 }
 
 function check_docker_running() {
     if ! systemctl is-active --quiet docker
     then
-        echo "[ fail] Docker is not running. Please start docker."
+        echo "[ fail] Docker is not running. Trying to start docker.."
+        echo "[>run] systemctl start docker"
+        systemctl stop docker || true
+        systemctl start docker
+        # Check if it is now running
+        if ! systemctl is-active --quiet docker
+        then
+            echo "[ fail] Docker is still not running. Please start docker."
+            return 1
+        fi
     fi
 }
 
@@ -28,6 +48,7 @@ function check_for_sdr() {
     if ! command -v rtl_test &> /dev/null
     then
         echo "[ fail] RTL-SDR could not be found. Please install rtl-sdr."
+        echo "[ run] adsblol-init"
     fi
 }
 
@@ -55,7 +76,7 @@ function check_for_required_env_vars(){
 
 function check_for_required_files(){
     REQUIRED_FILES=(
-        "services.txt" "cmdline.txt"
+        "services.txt" "docker-compose.yaml" ".env"
     )
     for file in "${REQUIRED_FILES[@]}"
     do
@@ -67,12 +88,18 @@ function check_for_required_files(){
     done
 }
 
+
+
 function run_checks(){
-    check_for_docker
-    check_containerd_running
-    check_docker_running
-    check_for_sdr
-    check_for_required_env_vars
-    check_for_required_files
+    FAILED=0
+    check_for_docker || FAILED=1
+    check_containerd_running || FAILED=1
+    check_docker_running || FAILED=1
+    check_for_sdr || FAILED=1
+    check_for_required_env_vars || FAILED=1
+    check_for_required_files || FAILED=1
+
+    # If any of the checks failed, exit with 1
+    if [ $FAILED -eq 1 ]; then exit 1 fi
 }
 run_checks

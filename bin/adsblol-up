@@ -6,8 +6,8 @@ cd /opt/adsblol
 
 # If no cmdline.txt, error and tell to run adsblol-gen
 if [ ! -f /opt/adsblol/cmdline.txt ]; then
-    echo "No cmdline.txt found. Run adsblol-gen to generate it"
-    exit 1
+    # run adsblol-gen
+    source /opt/adsblol/bin/adsblol-gen
 fi
 
 # Get the cmd from /opt/adsblol/cmdline.txt
