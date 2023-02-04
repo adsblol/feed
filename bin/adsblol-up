@@ -1,9 +1,23 @@
 #!/bin/bash
 set -ex
 systemctl start containerd || true
-
+systemctl start docker || true
 cd /opt/adsblol
-nerdctl compose rm -f
-nerdctl --runtime=/usr/local/bin/crun compose up -d
-sleep 2
-nerdctl ps
+
+# If no cmdline.txt, error and tell to run adsblol-gen
+if [ ! -f /opt/adsblol/cmdline.txt ]; then
+    echo "No cmdline.txt found. Run adsblol-gen to generate it"
+    exit 1
+fi
+
+# Get the cmd from /opt/adsblol/cmdline.txt
+CMD=$(cat /opt/adsblol/cmdline.txt)
+
+echo "Removing old docker stack if it exists"
+docker compose rm -f || true
+
+echo "Running docker compose up with /opt/adsblol/cmdline.txt"
+exec $CMD
+
+echo "Attaching to logs... You can Ctrl-C to exit"
+docker compose logs -f

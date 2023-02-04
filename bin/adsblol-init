@@ -45,40 +45,45 @@ do
     fi
 done
 
-# Install containerd
-# Get latest containerd/containerd release
-ARCH=$(uname -m)
-if [ ! -z $(which containerd) ]; then
-    echo "[debug] containerd already installed"
+# Install docker
+# If it is already installed, we do nothing
+if [ ! -z $(which docker) ]; then
+    echo "docker already installed. Skipping"
 else
-    echo "[debug] installing containerd"
-    # If arch is armv7l or arm7l
-    if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "arm7l" ]; then
-        curl -L "https://github.com/alexellis/containerd-arm/releases/download/v1.6.8/containerd-1.6.8-linux-armhf.tar.gz" | tar xvz -C /usr/local/bin
-    else
-        ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-        CONTAINERD_VERSION=$(curl -s https://api.github.com/repos/containerd/containerd/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
-        curl -L "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/
-    fi
-fi
-# If /etc/systemd/system/containerd.service does not exist
-if [ ! -f /etc/systemd/system/containerd.service ]; then
-    echo "[debug] installing containerd.service"
-    curl -L "https://raw.githubusercontent.com/containerd/containerd/main/containerd.service" -o /etc/systemd/system/containerd.service
-    chmod +x /usr/local/bin/containerd
-    systemctl daemon-reload
-    systemctl enable --now containerd
-else
-    echo "containerd.service already exists"
-fi
-
-# Install CNI
-if [ ! -d /opt/cni/bin ] || [ ! -f /etc/cni/net.d/99-loopback.conf ]; then
-    echo "[debug] installing CNI"
-    mkdir -p /opt/cni/bin /etc/cni/net.d
+    echo "[debug] installing docker"
+    TMPDIR=$(mktemp -d)
     ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-${ARCH}-v1.2.0.tgz | tar xvz -C /opt/cni/bin
-    echo '{"cniVersion":"0.3.1","type":"loopback"}' > /etc/cni/net.d/99-loopback.conf
+    ARCH=$(echo $ARCH | sed 's/arm/armhf/')
+    URL="https://download.docker.com/linux/static/stable/$ARCH/docker-23.0.0.tgz"
+    wget $URL -O - | tar xvz -C $TMPDIR
+    mv $TMPDIR/docker/* /usr/local/bin
+
+    # Create default docker config
+    mkdir -p /etc/docker
+    cat << EOF > /etc/docker/daemon.json
+{
+    "runtime": "runc",
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    },
+    "storage-driver": "overlay2",
+}
+EOF
+
+    # get containerd service
+    wget https://raw.githubusercontent.com/containerd/containerd/master/containerd.service -O /etc/systemd/system/containerd.service
+    systemctl daemon-reload
+    systemctl enable containerd
+    systemctl start containerd
+    # get dockerd service
+    wget https://raw.githubusercontent.com/moby/moby/master/contrib/init/systemd/docker.service -O /etc/systemd/system/docker.service
+    wget https://raw.githubusercontent.com/moby/moby/master/contrib/init/systemd/docker.socket -O /etc/systemd/system/docker.socket
+    systemctl daemon-reload
+    systemctl enable docker
+    systemctl start docker
+    rm -rf $TMPDIR
 fi
 
 # Install crun
@@ -88,30 +93,12 @@ else
     echo "[debug] installing crun"
     ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
     ARCH=$(echo $ARCH | sed 's/arm/armhf/')
-    wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux-${ARCH}" -O /usr/local/bin/crun
+    if [ "$ARCH" = "armhf" ]; then
+        wget "https://raw.githubusercontent.com/katlol/arm32/main/bin/crun" -O /usr/local/bin/crun
+    else
+        wget "https://github.com/containers/crun/releases/download/1.8/crun-1.8-linux.${ARCH}" -O /usr/local/bin/crun
+    fi
     chmod +x /usr/local/bin/crun
-fi
-
-# Get yq
-if [ ! -z $(which yq) ]; then
-    echo "yq already installed"
-else
-    echo "[debug] installing yq"
-    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    VERSION=v4.30.8
-    wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_${ARCH}.tar.gz -O - | tar xvz -C /usr/local/bin
-    mv /usr/local/bin/yq_linux_* /usr/local/bin/yq
-    chmod +x /usr/local/bin/yq
-fi
-
-# Install nerdctl (docker compatible CLI)
-if [ ! -z $(which nerdctl) ]; then
-    echo "nerdctl already installed"
-else
-    NERDCTL_VERSION=$(curl -s https://api.github.com/repos/containerd/nerdctl/releases/latest | grep tag_name | cut -d '"' -f 4| cut -d 'v' -f 2)
-    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
-    ARCH=$(echo $ARCH | sed 's/^arm$/arm-v7/')
-    curl -L "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
 fi
 
 #mkdirs
@@ -129,6 +116,7 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
 
 chmod +x /usr/local/bin/containerd || true
 systemctl enable --now containerd || true
+systemctl enable --now docker || true
 
 # Add ourselves to /usr/local/bin
 if [ ! -f /usr/local/bin/adsblol-init ]; then

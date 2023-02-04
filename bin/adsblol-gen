@@ -1,24 +1,24 @@
 #!/bin/bash
 set -ex
-# FIXME https://github.com/containerd/nerdctl/issues/1831
 # This script reads services.txt
-# default-docker-compose.yaml has all the services
-# If the service has a matching field in its profiles section, it will be Carried Over
+# It generates a docker compose up command enabling all the services that are not commented out
 
-# Generate header of docker-compose.yaml
 cd /opt/adsblol
-cat << EOF > docker-compose.yaml
-version: "3.8"
-services: {}
-EOF
-
-
+DOCKER_COMPOSE_CMD="docker compose up -d"
 SERVICES=$(cat services.txt|grep -v "^#")
 for service in $SERVICES
 do
-    yq ".services.$service *= load(\"default-docker-compose.yaml\").services.$service" docker-compose.yaml > docker-compose.yaml.tmp
-    mv docker-compose.yaml.tmp docker-compose.yaml
+    DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD $service"
 done
+
+set +ex
+echo "I have made a docker compose command for you, enabling what you have selected in services.txt."
+echo $DOCKER_COMPOSE_CMD
+echo "It is also been saved to /opt/adsblol/cmdline.txt"
+echo $DOCKER_COMPOSE_CMD > /opt/adsblol/cmdline.txt
+echo "This command will be used by adsblol-up"
+echo "You can run this command now, or run adsblol-up to run it automatically"
+echo
 
 # Get the RTLSDRs so we can put them in docker-compose.yaml as devices using this format
 # /dev/adsblol1, /dev/adsblol2, etc
