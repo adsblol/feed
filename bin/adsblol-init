@@ -45,6 +45,7 @@ else
     if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "arm7l" ]; then
         curl -L "https://github.com/alexellis/containerd-arm/releases/download/v1.6.8/containerd-1.6.8-linux-armhf.tar.gz" | tar xvz -C /usr/local/bin
     else
+        ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
         CONTAINERD_VERSION=$(curl -s https://api.github.com/repos/containerd/containerd/releases/latest | grep tag_name | cut -d '"' -f 4|cut -d 'v' -f 2)
         curl -L "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
     fi
@@ -64,7 +65,8 @@ fi
 if [ ! -d /opt/cni/bin ] || [ ! -f /etc/cni/net.d/99-loopback.conf ]; then
     echo "[debug] installing CNI"
     mkdir -p /opt/cni/bin /etc/cni/net.d
-    curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm-v1.2.0.tgz | tar xvz -C /opt/cni/bin
+    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+    curl -sSL https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-${ARCH}-v1.2.0.tgz | tar xvz -C /opt/cni/bin
     echo '{"cniVersion":"0.3.1","type":"loopback"}' > /etc/cni/net.d/99-loopback.conf
     fi
 fi
@@ -74,7 +76,7 @@ if [ ! -z $(which yq) ]; then
     echo "yq already installed"
 else
     echo "[debug] installing yq"
-    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/')
+    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
     VERSION=v4.30.8
     wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_${ARCH}.tar.gz -O - | tar xvz -C /usr/local/bin
     mv /usr/local/bin/yq_linux_* /usr/local/bin/yq
@@ -86,7 +88,8 @@ if [ ! -z $(which nerdctl) ]; then
     echo "nerdctl already installed"
 else
     NERDCTL_VERSION=$(curl -s https://api.github.com/repos/containerd/nerdctl/releases/latest | grep tag_name | cut -d '"' -f 4| cut -d 'v' -f 2)
-    ARCH=$(uname -m| sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/^arm$/arm-v7/')
+    ARCH=$(uname -m | sed 's/arm7l/arm/' | sed 's/armv7l/arm/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+    ARCH=$(echo $ARCH | sed 's/arm/arm-v7/')
     curl -L "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-${ARCH}.tar.gz" | tar xvz -C /usr/local/bin
 fi
 
