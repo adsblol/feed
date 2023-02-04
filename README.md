@@ -1,10 +1,6 @@
 # adsb.lol feed
 
-This repo holds the code for the feed client.
-
-The feed client runs on containerd, a high performance container runtime.
-
-ARMv7, ARM64 and AMD64 architectures are all supported.
+The adsb.lol feed client is a toolkit that 
 
 ## Usage
 
@@ -17,6 +13,12 @@ If you have an issue with the feed client, please [paste.ee](https://paste.ee) y
 ## Installation
 
 1. You should be root during this process. You can switch user to root with `sudo su`.
+
+```
+pi@my-raspberry:~ $ sudo su
+root@my-raspberry:~ #
+
+```
 
 2. First, ensure your system is up to date.
 ```
@@ -74,6 +76,9 @@ Once you have done this, run `adsblol-up` to start the containers.
 
 ## Troubleshooting
 
+Running `adsblol-debug` will tell you about common mistakes.
+
 ### Logs
+
 - `adsblol-logs` - view logs
 - `adsblol-logs -f` - view logs and follow
