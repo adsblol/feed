@@ -122,3 +122,7 @@ fi
 if [ ! -f /usr/local/bin/adsblol-gen ]; then
     ln -s /opt/adsblol/bin/adsblol-gen /usr/local/bin/adsblol-gen
 fi
+
+if [ ! -f /usr/local/bin/adsblol-up ]; then
+    ln -s /opt/adsblol/bin/adsblol-up /usr/local/bin/adsblol-up
+fi
