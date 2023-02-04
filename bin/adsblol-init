@@ -153,3 +153,7 @@ fi
 if [ ! -f /usr/local/bin/adsblol-update ]; then
     ln -s /opt/adsblol/bin/adsblol-up /usr/local/bin/adsblol-update
 fi
+
+if [ ! -f /usr/local/bin/adsblol-sdrserial ]; then
+    ln -s /opt/adsblol/bin/adsblol-up /usr/local/bin/adsblol-sdrserial
+fi
