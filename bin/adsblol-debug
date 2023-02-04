@@ -1,0 +1,69 @@
+#!/bin/bash
+set -e
+cd /opt/adsblol
+
+
+function check_for_docker() {
+    if ! command -v docker &> /dev/null
+    then
+        echo "[ fail] Docker could not be found. Please install docker."
+    fi
+}
+
+function check_containerd_running() {
+    if ! systemctl is-active --quiet containerd
+    then
+        echo "[ fail] Containerd is not running. Please start containerd."
+    fi
+}
+
+function check_docker_running() {
+    if ! systemctl is-active --quiet docker
+    then
+        echo "[ fail] Docker is not running. Please start docker."
+    fi
+}
+
+function check_for_sdr() {
+    if ! command -v rtl_test &> /dev/null
+    then
+        echo "[ fail] RTL-SDR could not be found. Please install rtl-sdr."
+    fi
+}
+
+function check_for_required_env_vars(){
+    REQUIRED_ENV_VARS=(
+        "FEEDER_LAT" "FEEDER_LONG" "FEEDER_TZ"
+        "MLAT_SITE_NAME" "ADSB_DONGLE_SERIAL"
+        "READSB_NET_CONNECTOR" "MLATHUB_NET_CONNECTOR"
+        "ADSBLOL_NET_CONNECTOR" "ADSBLOL_MLAT_CONFIG"
+    )
+    for env_var in "${REQUIRED_ENV_VARS[@]}"
+    do
+        # Check if it is set, non empty (and uncommented) on /opt/adsblol/.env
+        if ! grep -q "^$env_var=" /opt/adsblol/.env | grep -q -v "^#"
+        then
+            echo "[ fail] $env_var is commented out in /opt/adsblol/.env"
+        elif ! grep -q "^$env_var=" /opt/adsblol/.env
+        then
+            echo "[ fail] $env_var is not set in /opt/adsblol/.env"
+        elif [ -z "$(grep "^$env_var=" /opt/adsblol/.env | cut -d "=" -f 2)" ]
+        then
+            echo "[ fail] $env_var is empty in /opt/adsblol/.env"
+        fi
+    done
+}
+
+function check_for_required_files(){
+    REQUIRED_FILES=(
+        "services.txt" "cmdline.txt"
+    )
+    for file in "${REQUIRED_FILES[@]}"
+    do
+        # Check if it is set, non empty (and uncommented) on /opt/adsblol/.env
+        if ! [ -f "/opt/adsblol/$file" ]
+        then
+            echo "[ fail] $file is missing in /opt/adsblol/"
+        fi
+    done
+}
