@@ -265,7 +265,8 @@ services:
   planewatch:
 # planewatch feeds ADS-B and UAT data (from readsb) to Plane.Watch.
     image: planewatch/plane-watch
-
+    profiles:
+      - planewatch
     container_name: planewatch
     hostname: planewatch
     restart: always
@@ -438,6 +439,8 @@ services:
   dumpvdl2:
     image: ghcr.io/sdr-enthusiasts/docker-dumpvdl2:latest
     container_name: dumpvdl2
+    profiles:
+      - dumpvdl2
     restart: always
     devices:
       - /dev/bus/usb:/dev/bus/usb
