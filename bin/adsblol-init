@@ -140,8 +140,10 @@ systemctl enable --now docker || true
 # Add ourselves to /usr/local/bin
 FILES=$(ls /opt/adsblol/bin)
 for file in $FILES; do
-    if [ ! -f /usr/local/bin/$file || $(readlink /usr/local/bin/$file) != "/opt/adsblol/bin/$file" ]; then
-        rm -f /usr/local/bin/$file || true
-        ln -s /opt/adsblol/bin/$file /usr/local/bin/$file
+    # Check if the file exists, or the file exists but is not pointing to the right file
+    if [ ! -f /usr/local/bin/$file ] || [ ! $(readlink -f /usr/local/bin/$file) = "/opt/adsblol/bin/$file" ]; then
+        rm -f /usr/local/bin/$file
+        ln -sf /opt/adsblol/bin/$file /usr/local/bin/$file
     fi
+
 done
