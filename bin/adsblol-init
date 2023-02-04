@@ -25,6 +25,7 @@ if [ ! -d /opt/adsblol ]; then
     echo "[debug] creating /opt/adsblol"
     git clone https://github.com/adsblol/feed /opt/adsblol
 else
+    cd /opt/adsblol
     git fetch --all
     git pull
 fi
