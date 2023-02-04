@@ -36,6 +36,17 @@ else
     git pull
 fi
 
+# Add ourselves to /usr/local/bin
+FILES=$(ls /opt/adsblol/bin)
+for file in $FILES; do
+    # Check if the file exists, or the file exists but is not pointing to the right file
+    if [ ! -f /usr/local/bin/$file ] || [ ! $(readlink -f /usr/local/bin/$file) = "/opt/adsblol/bin/$file" ]; then
+        rm -f /usr/local/bin/$file
+        ln -sf /opt/adsblol/bin/$file /usr/local/bin/$file
+    fi
+
+done
+
 # SDR
 curl -sL -o /etc/udev/rules.d/rtl-sdr.rules https://raw.githubusercontent.com/wiedehopf/adsb-scripts/master/osmocom-rtl-sdr.rules
 BLOCKED_MODULES="rtl2832 dvb_usb_rtl28xxu rtl2832_sdr rtl8xxxu rtl2838"
@@ -140,14 +151,3 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
 chmod +x /usr/local/bin/containerd || true
 systemctl enable --now containerd || true
 systemctl enable --now docker || true
-
-# Add ourselves to /usr/local/bin
-FILES=$(ls /opt/adsblol/bin)
-for file in $FILES; do
-    # Check if the file exists, or the file exists but is not pointing to the right file
-    if [ ! -f /usr/local/bin/$file ] || [ ! $(readlink -f /usr/local/bin/$file) = "/opt/adsblol/bin/$file" ]; then
-        rm -f /usr/local/bin/$file
-        ln -sf /opt/adsblol/bin/$file /usr/local/bin/$file
-    fi
-
-done
