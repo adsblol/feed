@@ -9,9 +9,11 @@ function print_env() {
         "MLATHUB_NET_CONNECTOR"
         "ADSBLOL_ADDITIONAL_NET_CONNECTOR"
         "ADSBLOL_ADDITIONAL_MLAT_CONFIG"
+        "ADSBLOL_MLAT_PRIVACY"
+        "DUMP978_DONGLE_SERIAL"
     )
     for env in "${ENVS[@]}"; do
-        echo "[ info] $env=$(grep $env $FILE | cut -d "=" -f 2)"
+        echo "[ info] $env=$(grep ^$env $FILE | cut -d "=" -f 2)"
     done
 }
 
