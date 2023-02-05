@@ -8,12 +8,12 @@ function print_env(){
         "READSB_NET_CONNECTOR"
         "MLATHUB_NET_CONNECTOR"
         "ADSBLOL_ADDITIONAL_NET_CONNECTOR"
-        "ASDBLOL_ADDITIONAL_MLAT_CONFIG"
+        "ADSBLOL_ADDITIONAL_MLAT_CONFIG"
     )
     for env in "${ENVS[@]}"
     do
         echo "$env=$(grep $env $FILE|cut -d "=" -f 2)"
     done
 }
-
+# If --share, then upload to pastebin
 print_env
