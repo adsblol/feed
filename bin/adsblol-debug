@@ -54,6 +54,10 @@ function check_for_required_env_vars() {
         "READSB_NET_CONNECTOR" "MLATHUB_NET_CONNECTOR"
     )
     for var in "${REQUIRED_ENV_VARS[@]}"; do
+        # Check if it exists and not empty, then return with 0
+        if grep -q "^$var=" /opt/adsblol/.env && grep -q "^$var=.*$" /opt/adsblol/.env; then
+            return 0
+        fi
         # Check if the variable is missing from /opt/adsblol/.env
         if ! grep -q "^$var=" /opt/adsblol/.env; then
             echo "[ fail] $var is missing in /opt/adsblol/.env"
@@ -65,6 +69,9 @@ function check_for_required_env_vars() {
         # Check if it is there, but empty
         elif grep -q "^$var=$" /opt/adsblol/.env; then
             echo "[ fail] $var is empty in /opt/adsblol/.env"
+            FAILED=1
+        else
+            echo "[ fail] $var is missing. Please report this bug."
             FAILED=1
         fi
     done
