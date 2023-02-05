@@ -49,29 +49,53 @@ function check_for_sdr() {
     then
         echo "[ fail] RTL-SDR could not be found. Please install rtl-sdr."
         echo "[ run] adsblol-init"
+        return 1
     fi
 }
 
 function check_for_required_env_vars(){
+    FAILED=0
     REQUIRED_ENV_VARS=(
         "FEEDER_LAT" "FEEDER_LONG" "FEEDER_TZ"
         "MLAT_SITE_NAME" "ADSB_DONGLE_SERIAL"
         "READSB_NET_CONNECTOR" "MLATHUB_NET_CONNECTOR"
-        "ADSBLOL_NET_CONNECTOR" "ADSBLOL_MLAT_CONFIG"
     )
     for var in "${REQUIRED_ENV_VARS[@]}"
     do
         # Check if the variable is missing from /opt/adsblol/.env
         if ! grep -q "^$var=" /opt/adsblol/.env; then
             echo "[ fail] $var is missing in /opt/adsblol/.env"
+            FAILED=1
         # Check if it there, but commented out
         elif grep -q "^#$var=" /opt/adsblol/.env; then
             echo "[ fail] $var is commented out in /opt/adsblol/.env"
+            FAILED=1
         # Check if it is there, but empty
         elif grep -q "^$var=$" /opt/adsblol/.env; then
             echo "[ fail] $var is empty in /opt/adsblol/.env"
+            FAILED=1
         fi
     done
+    return $FAILED
+}
+
+function check_for_unchanged_default_vars(){
+    FAILED=0
+    if grep -q "^FEEDER_ALT_M=dd$" /opt/adsblol/.env; then
+        echo "[ fail] FEEDER_ALT_M is set to the default value of dd. Please set it to your altitude in meters."
+        FAILED=1
+    fi
+    # FEEDER_LAT
+    if grep -q "^FEEDER_LAT=dd.ddddd$" /opt/adsblol/.env; then
+        echo "[ fail] FEEDER_LAT is set to the default value of dd.ddddd. Please set it to your latitude."
+        FAILED=1
+    fi
+    # FEEDER_LONG
+    if grep -q "^FEEDER_LONG=dd.ddddd$" /opt/adsblol/.env; then
+        echo "[ fail] FEEDER_LONG is set to the default value of dd.ddddd. Please set it to your longitude."
+        FAILED=1
+    fi
+    return $FAILED
 }
 
 function check_for_required_files(){
@@ -108,6 +132,7 @@ function run_checks(){
     check_for_required_env_vars || FAILED=1
     check_for_required_files || FAILED=1
     check_env_format || FAILED=1
+    check_for_unchanged_default_vars || FAILED=1
 
     # If any of the checks failed, exit with 1
     if [ $FAILED -eq 1 ]; then
