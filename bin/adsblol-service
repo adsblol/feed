@@ -1,0 +1,76 @@
+#!/bin/bash
+# Similar to adsblol-env, but for services.txt
+
+function print_enabled_services() {
+    for service in $(cat /opt/adsblol/services.txt | grep -v "^#"); do
+        echo "[ info] $service is enabled"
+    done
+}
+
+# adsblol-service enable <service>
+function enable_service() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: adsblol-service enable <service>"
+        exit 1
+    fi
+    if grep -q "^$2$" /opt/adsblol/services.txt; then
+        echo "[ info] $2 is already enabled"
+    elif grep -q "^# *$2$" /opt/adsblol/services.txt; then
+        echo "[ info] $2 is currently disabled"
+        sed -i "s/^# *$2$/$2/" /opt/adsblol/services.txt
+        echo "[ info] $2 has now been enabled"
+    else
+        echo "[ info] $2 is not in the list"
+        echo "$2" >>/opt/adsblol/services.txt
+        echo "[ info] $2 has now been enabled"
+    fi
+    print_enabled_services
+}
+
+function disable_service() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: adsblol-service disable <service>"
+        exit 1
+    fi
+    if grep -q "^$2$" /opt/adsblol/services.txt; then
+        echo "[ info] $2 is currently enabled"
+        sed -i "s/^$2$/# $2/" /opt/adsblol/services.txt
+        echo "[ info] $2 has now been disabled"
+    elif grep -q "^# *$2$" /opt/adsblol/services.txt; then
+        echo "[ info] $2 is already disabled"
+    else
+        echo "[ info] $2 is not in the list"
+        echo "# $2" >>/opt/adsblol/services.txt
+        echo "[ info] $2 has now been disabled"
+    fi
+    print_enabled_services
+}
+
+# If argument = list,
+if [ "$1" == "list" ]; then
+    print_enabled_services
+    exit 0
+fi
+
+# If argument = enable,
+if [ "$1" == "enable" ]; then
+    enable_service "$@"
+    adsblol-gen
+    exit 0
+fi
+
+# If argument = disable,
+if [ "$1" == "disable" ]; then
+    disable_service "$@"
+    adsblol-gen
+    exit 0
+fi
+
+# If no arguments, print usage
+if [ -z "$1" ]; then
+    echo "[ info] Usage:"
+    echo "[ info]   adsblol-service list (list enabled services)"
+    echo "[ info]   adsblol-service enable <service> (enable a service)"
+    echo "[ info]   adsblol-service disable <service> (disable a service)"
+    exit 1
+fi
