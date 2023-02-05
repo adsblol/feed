@@ -12,8 +12,42 @@ function print_env(){
     )
     for env in "${ENVS[@]}"
     do
-        echo "$env=$(grep $env $FILE|cut -d "=" -f 2)"
+        echo "[ info] $env=$(grep $env $FILE|cut -d "=" -f 2)"
     done
 }
-# If --share, then upload to pastebin
-print_env
+
+# If running without arguments, print the environment variables
+if [ $# -eq 0 ]; then
+    print_env
+    exit 0
+fi
+
+# If first argument is set,
+# adsblol-env set MYHOST 10.0.0.2
+if [ "$1" == "set" ]; then
+    if [ $# -ne 3 ]; then
+        echo "Usage: adsblol-env set <variable> <value>"
+        exit 1
+    fi
+    # Check if variable is already in the file
+    if grep -q "^$2=" /opt/adsblol/.env; then
+        echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+        # If it is, replace it
+        sed -i "s/^$2=.*/$2=$3/" /opt/adsblol/.env
+        echo "[ info] $2 has now been changed to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+    # If it is commented out (might be a space after the #)
+    elif grep -q "^# *$2=" /opt/adsblol/.env; then
+        echo "[ info] $2 is currently commented out"
+        # Uncomment it
+        sed -i "s/^# *$2=.*/$2=$3/" /opt/adsblol/.env
+        echo "[ info] $2 has now been changed to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+    else
+        echo "[ info] $2 is not set"
+        # If it is not in the file, add it
+        echo "$2=$3" >> /opt/adsblol/.env
+        echo "[ info] $2 has now been set to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+    fi
+
+    print_env
+    exit 0
+fi
