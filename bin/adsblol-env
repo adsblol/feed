@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-function print_env(){
+function print_env() {
     FILE=/opt/adsblol/.env
     ENVS=(
         "ADSB_DONGLE_SERIAL"
@@ -10,44 +10,60 @@ function print_env(){
         "ADSBLOL_ADDITIONAL_NET_CONNECTOR"
         "ADSBLOL_ADDITIONAL_MLAT_CONFIG"
     )
-    for env in "${ENVS[@]}"
-    do
-        echo "[ info] $env=$(grep $env $FILE|cut -d "=" -f 2)"
+    for env in "${ENVS[@]}"; do
+        echo "[ info] $env=$(grep $env $FILE | cut -d "=" -f 2)"
     done
 }
 
-# If running without arguments, print the environment variables
-if [ $# -eq 0 ]; then
-    print_env
-    exit 0
-fi
-
 # If first argument is set,
 # adsblol-env set MYHOST 10.0.0.2
-if [ "$1" == "set" ]; then
+function set_env() {
     if [ $# -ne 3 ]; then
-        echo "Usage: adsblol-env set <variable> <value>"
+        echo "Usage: adsblol-env $1 <variable> <value>"
         exit 1
     fi
     # Check if variable is already in the file
     if grep -q "^$2=" /opt/adsblol/.env; then
-        echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+        echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
         # If it is, replace it
         sed -i "s/^$2=.*/$2=$3/" /opt/adsblol/.env
-        echo "[ info] $2 has now been changed to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+        echo "[ info] $2 has now been changed to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
     # If it is commented out (might be a space after the #)
     elif grep -q "^# *$2=" /opt/adsblol/.env; then
         echo "[ info] $2 is currently commented out"
         # Uncomment it
         sed -i "s/^# *$2=.*/$2=$3/" /opt/adsblol/.env
-        echo "[ info] $2 has now been changed to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+        echo "[ info] $2 has now been changed to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
     else
         echo "[ info] $2 is not set"
         # If it is not in the file, add it
-        echo "$2=$3" >> /opt/adsblol/.env
-        echo "[ info] $2 has now been set to $(grep $2 /opt/adsblol/.env|cut -d "=" -f 2)"
+        echo "$2=$3" >>/opt/adsblol/.env
+        echo "[ info] $2 has now been set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
     fi
 
     print_env
     exit 0
+}
+
+# If argument = list, view, show, print:
+if [ "$1" == "list" ] || [ "$1" == "view" ] || [ "$1" == "show" ] || [ "$1" == "print" ]; then
+    print_env
+    exit 0
+fi
+
+# If argument = set, change, edit, replace, modify, update:
+if [ "$1" == "set" ] || [ "$1" == "change" ] || [ "$1" == "edit" ] || [ "$1" == "replace" ] || [ "$1" == "modify" ] || [ "$1" == "update" ]; then
+    if [ $# -ne 3 ]; then
+        echo "Usage: adsblol-env $1 <variable> <value>"
+        exit 1
+    fi
+    set_env "$@"
+fi
+
+# If argument is empty
+if [ -z "$1" ]; then
+    echo "[ info] Usage:"
+    echo "[ info]   adsblol-env list"
+    echo "[ info]   adsblol-env set <variable> <value>"
+    exit 1
 fi

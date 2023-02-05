@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 systemctl start containerd || true
 systemctl start docker || true
 cd /opt/adsblol
@@ -13,12 +13,12 @@ fi
 # Get the cmd from /opt/adsblol/cmdline.txt
 CMD=$(cat /opt/adsblol/cmdline.txt)
 
-echo "Removing old docker stack if it exists"
+echo "[ info] Removing old docker stack if it exists"
+docker-compose $CMD down || true
 docker-compose $CMD rm -f || true
 
-
-echo "Running docker-compose up with /opt/adsblol/cmdline.txt"
+echo "[ info] Running docker-compose up with /opt/adsblol/cmdline.txt"
 exec docker-compose $CMD up -d
 
-echo "Attaching to logs... You can Ctrl-C to exit"
+echo "[ info] Attaching to logs... You can Ctrl-C to exit"
 docker-compose $CMD logs -f

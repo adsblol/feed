@@ -12,9 +12,4 @@ do
 done
 DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD"
 
-echo "I have made a docker compose command for you, enabling what you have selected in services.txt."
-echo $DOCKER_COMPOSE_CMD
-echo "It is also been saved to /opt/adsblol/cmdline.txt"
-echo $DOCKER_COMPOSE_CMD > /opt/adsblol/cmdline.txt
-echo "This command will be used by adsblol-up"
-echo "You can run this command now, or run adsblol-up to run it automatically"
+echo "[ info] cmdline.txt: $DOCKER_COMPOSE_CMD"

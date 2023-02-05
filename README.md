@@ -44,17 +44,22 @@ The `adsblol` service can feed to other aggregators.
 
 To feed <https://adsb.one> and <https://theairtraffic.com>, two community aggregators we actively work with to share data, follow these steps.
 
-Edit the .env file and ensure these lines look like this:
-
+Run:
 ```
-READSB_ADDITIONAL_NET_CONNECTOR=feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out
-ADSBLOL_ADDITIONAL_MLAT_CONFIG=feed.adsb.adsb.one,64006,39001;feed.theairtraffic.com,31090,39002
-MLAT_MLATHUB_NET_CONNECTOR=adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in
+adsblol-env set READSB_ADDITIONAL_NET_CONNECTOR feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out
+adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG feed.adsb.adsb.one,64006,39001;feed.theairtraffic.com,31090,39002
+adsblol-env set MLAT_MLATHUB_NET_CONNECTOR adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in
+```
+Then, restart the stack
+```
+adsblol-up
 ```
 
-If you want to feed to other types / commercial aggregators, you will need to edit the `services.txt` file.
+## Enabling a service
 
-To do this, open the `services.txt` file and enable the aggregator by uncommenting it.
+To enable a service, run `adsblol-service enable <service>`
+To disable a service, run `adsblol-service disable <service>`
+This is a helper command that will edit the `services.txt` file, and run `adsblol-gen` to generate a new `cmdline.txt`.
 
 You may have to define further environment variables in the `.env` file.
 
@@ -66,9 +71,28 @@ Once you have done this, run `adsblol-up` to start the containers.
 
 ## Troubleshooting
 
+To update, run `adsblol-update`
+
 Running `adsblol-debug` will tell you about common mistakes.
 
 ### Logs
 
 - `adsblol-logs` - view logs
 - `adsblol-logs -f` - view logs and follow
+
+### Services
+- `adsblol-service enable <service>` - enable a service
+- `adsblol-service disable <service>` - disable a service
+- `adsblol-service list` - list all enabled services
+
+### Environment
+- `adsblol-env list` - list all environment variables
+- `adsblol-env set <key>` - set an environment variable
+
+### SDR
+- `adsblol-sdr test` - Runs rtl_test
+- `adsblol-sdr dockertest` - Runs rtl_test in a docker container
+- `adsblol-sdr dockerppm` - Runs rtl_test in a docker container with the intent to estimate the PPM
+
+### Reset
+- `adsblol-reset` - reset the /opt/adsblol directory

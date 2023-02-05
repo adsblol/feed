@@ -1,4 +1,0 @@
-#!/bin/bash
-set -ex
-docker run --rm -ti --device=/dev/bus/usb:/dev/bus/usb \
-    --entrypoint rtl_test ghcr.io/sdr-enthusiasts/docker-readsb-protobuf
