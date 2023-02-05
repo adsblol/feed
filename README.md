@@ -68,19 +68,24 @@ If you have an issue with the feed client, please [paste.ee](https://paste.ee) y
 
 The `adsblol` service can feed to other aggregators.
 
-To feed [adsb.one](https://adsb.one) and [theairtraffic.com](https://theairtraffic.com),
-two community aggregators we actively work with to share data, follow these steps.
+In this example, we feed [adsb.one](https://adsb.one) and [theairtraffic.com](https://theairtraffic.com),
+two community aggregators we actively work with to share data.
 
-Run:
+### Run
+
 ```
 adsblol-env set READSB_ADDITIONAL_NET_CONNECTOR "feed.adsb.one,64004,beast_reduce_plus_out;feed.theairtraffic.com,30004,beast_reduce_plus_out"
 adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.one,64006,39001,-privacy true;feed.theairtraffic.com,31090,39002,-privacy true"
 adsblol-env set MLAT_MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
 ```
-Then, restart the stack
+
+### Restart the stack
+
 ```
 adsblol-up
 ```
+
+You can now check [https://adsb.one/myip](adsb.one) and [https://theairtraffic.com/feed/myip/](theairtraffic.com) to see if your feed is working.
 
 ## Enabling a service
 

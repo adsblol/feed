@@ -22,6 +22,10 @@ function set_env() {
         echo "Usage: adsblol-env $1 <variable> <value>"
         exit 1
     fi
+    # If value is empty, print a warning
+    if [ -z "$3" ]; then
+        echo "[ warn] $2 is empty. It will be set to an empty string."
+    fi
     # Check if variable is already in the file
     if grep -q "^$2=" /opt/adsblol/.env; then
         echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
@@ -51,7 +55,7 @@ fi
 
 # If argument = set, change, edit, replace, modify, update:
 if [ "$1" == "set" ] || [ "$1" == "change" ] || [ "$1" == "edit" ] || [ "$1" == "replace" ] || [ "$1" == "modify" ] || [ "$1" == "update" ]; then
-    if [ $# -ne 3 ]; then
+    if [ $# -ne 2 ]; then
         echo "Usage: adsblol-env $1 <variable> <value>"
         exit 1
     fi
