@@ -136,7 +136,7 @@ function check_for_old_envs() {
                 echo "[ fail] If you would like to keep privacy mode on (does not appear on map.adsb.lol)"
                 echo "[ fail] You can run:"
                 echo "[  run] adsblol-env unset ADSBLOL_MLAT_PRIVACY"
-                echo "[  run] adsblol-env set ADSBLOL_MLAT_CONFIG=--privacy"
+                echo "[  run] adsblol-env set ADSBLOL_MLAT_CONFIG --privacy"
                 echo "[ else]"
                 echo "[ fail] If you would like to turn privacy mode off (appears on map.adsb.lol)"
                 echo "[  run] adsblol-env unset ADSBLOL_MLAT_CONFIG"
