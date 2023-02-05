@@ -44,6 +44,28 @@ function set_env() {
     exit 0
 }
 
+function unset_env() {
+    # Check if variable is already in the file
+    if grep -q "^$2=" /opt/adsblol/.env; then
+        echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
+        # If it is, replace it
+        sed -i "s/^$2=.*/#$2=/" /opt/adsblol/.env
+        echo "[ info] $2 has now been unset"
+    # If it is commented out (might be a space after the #)
+    elif grep -q "^# *$2=" /opt/adsblol/.env; then
+        echo "[ info] $2 is currently commented out"
+        # Uncomment it
+        sed -i "s/^# *$2=.*/#$2=/" /opt/adsblol/.env
+        echo "[ info] $2 has now been unset"
+    else
+        echo "[ info] $2 is not set"
+        # If it is not in the file, add it
+        echo "#$2=" >>/opt/adsblol/.env
+        echo "[ info] $2 has now been unset"
+    fi
+    exit 0
+}
+
 # If argument = list, view, show, print:
 if [ "$1" == "list" ] || [ "$1" == "view" ] || [ "$1" == "show" ] || [ "$1" == "print" ]; then
     print_env
@@ -69,28 +91,6 @@ if [ "$1" == "unset" ] || [ "$1" == "remove" ] || [ "$1" == "delete" ] || [ "$1"
     unset_env "$@"
     exit 0
 fi
-
-function unset_env() {
-    # Check if variable is already in the file
-    if grep -q "^$2=" /opt/adsblol/.env; then
-        echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
-        # If it is, replace it
-        sed -i "s/^$2=.*/#$2=/" /opt/adsblol/.env
-        echo "[ info] $2 has now been unset"
-    # If it is commented out (might be a space after the #)
-    elif grep -q "^# *$2=" /opt/adsblol/.env; then
-        echo "[ info] $2 is currently commented out"
-        # Uncomment it
-        sed -i "s/^# *$2=.*/#$2=/" /opt/adsblol/.env
-        echo "[ info] $2 has now been unset"
-    else
-        echo "[ info] $2 is not set"
-        # If it is not in the file, add it
-        echo "$2=" >>/opt/adsblol/.env
-        echo "[ info] $2 has now been unset (set to empty)"
-    fi
-    exit 0
-}
 
 function usage() {
     echo "[ info] Usage:"
