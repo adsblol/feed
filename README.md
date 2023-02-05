@@ -85,7 +85,7 @@ adsblol-env set MLAT_MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001
 adsblol-up
 ```
 
-You can now check [https://adsb.one/myip](adsb.one) and [https://theairtraffic.com/feed/myip/](theairtraffic.com) to see if your feed is working.
+You can now check [adsb.one](https://adsb.one/myip) and [theairtraffic.com](https://theairtraffic.com/feed/myip/) to see if your feed is working.
 
 ## Enabling a service
 
