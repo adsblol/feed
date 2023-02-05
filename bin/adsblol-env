@@ -40,8 +40,6 @@ function set_env() {
         echo "$2=$3" >>/opt/adsblol/.env
         echo "[ info] $2 has now been set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
     fi
-
-    print_env
     exit 0
 }
 

@@ -24,7 +24,6 @@ function enable_service() {
         echo "$2" >>/opt/adsblol/services.txt
         echo "[ info] $2 has now been enabled"
     fi
-    print_enabled_services
 }
 
 function disable_service() {
@@ -43,7 +42,6 @@ function disable_service() {
         echo "# $2" >>/opt/adsblol/services.txt
         echo "[ info] $2 has now been disabled"
     fi
-    print_enabled_services
 }
 
 # If argument = list,
