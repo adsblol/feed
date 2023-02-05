@@ -3,7 +3,7 @@
 
 function print_enabled_services() {
     for service in $(cat /opt/adsblol/services.txt | grep -v "^#"); do
-        echo "[ info] $service is enabled"
+        echo "[ info] $service is enabled ($(check_service $service))"
     done
 }
 
@@ -41,6 +41,23 @@ function disable_service() {
         echo "[ info] $2 is not in the list"
         echo "# $2" >>/opt/adsblol/services.txt
         echo "[ info] $2 has now been disabled"
+    fi
+}
+
+# check if the container with name $service is running / stopped / missing and if it is healthy
+function check_service() {
+    if docker ps -a --format '{{.Names}}' | grep -q "^$1$"; then
+        if docker ps --format '{{.Names}}' | grep -q "^$1$"; then
+            if docker inspect --format='{{.State.Health.Status}}' $1 | grep -q "healthy"; then
+                printf "healthy"
+            else
+                printf "unhealthy"
+            fi
+        else
+            printf "stopped"
+        fi
+    else
+        printf "missing"
     fi
 }
 
