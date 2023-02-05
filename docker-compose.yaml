@@ -122,7 +122,7 @@ services:
 # ADSBHub (ADSB Hub)
 
   adsblol:
-    image: ghcr.io/sdr-enthusiasts/docker-multifeeder
+    image: ghcr.io/sdr-enthusiasts/docker-multifeeder@sha256:20b751d0512107872413511a9c86b1720f7606e46358b670c5ad9b1ede54fe61
     profiles:
       - adsblol
     depends_on:
