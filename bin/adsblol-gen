@@ -9,6 +9,6 @@ SERVICES=$(cat services.txt | grep -v "^#")
 for service in $SERVICES; do
     DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD --profile $service"
 done
-DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD"
+
 echo "$DOCKER_COMPOSE_CMD" >/opt/adsblol/cmdline.txt
 echo "[ info] cmdline.txt: $DOCKER_COMPOSE_CMD"

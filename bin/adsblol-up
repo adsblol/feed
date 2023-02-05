@@ -16,6 +16,7 @@ CMD=$(cat /opt/adsblol/cmdline.txt)
 echo "[ info] Removing old docker stack if it exists"
 docker-compose $CMD down || true
 docker-compose $CMD rm -f || true
+docker-compose $CMD pull || true
 
 echo "[ info] Running docker-compose up with /opt/adsblol/cmdline.txt"
 exec docker-compose $CMD up -d
