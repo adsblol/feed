@@ -120,6 +120,20 @@ function check_env_format() {
     fi
 }
 
+function check_for_old_envs() {
+    # Check for old envs
+    # For example, ADSBLOL_MLAT_PRIVACY is now ADSBLOL_MLAT_CONFIG
+    OLD_NEW_ENVS=(
+        "ADSBLOL_MLAT_PRIVACY=ADSBLOL_MLAT_CONFIG"
+    }
+    for env in "${OLD_NEW_ENVS[@]}"; do
+        OLD_ENV=$(echo $env | cut -d= -f1)
+        NEW_ENV=$(echo $env | cut -d= -f2)
+        if grep -q "^$OLD_ENV=" /opt/adsblol/.env; then
+            echo "[ fail] $OLD_ENV is deprecated. Please use $NEW_ENV instead."
+            return 1
+        fi
+    done
 function run_checks() {
     FAILED=0
     check_for_docker || FAILED=1
