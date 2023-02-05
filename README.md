@@ -119,7 +119,8 @@ Running `adsblol-debug` will tell you about common mistakes.
 
 ### Environment
 - `adsblol-env list` - list all environment variables
-- `adsblol-env set <key>` - set an environment variable
+- `adsblol-env set <key>` - set an environment variable (also updates if it already exists)
+- `adsblol-env unset <key>` - unset an environment variable
 
 ### SDR
 - `adsblol-sdr test` - Runs rtl_test
