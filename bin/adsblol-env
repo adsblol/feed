@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+function print_env(){}
+    FILE=/opt/adsblol/.env
+    ENVS=(
+        "ADSB_DONGLE_SERIAL" "READSB_NET_CONNECTOR"
+        "MLATHUB_NET_CONNECTOR" "ADSBLOL_ADDITIONAL_NET_CONNECTOR"
+        "ASDBLOL_ADDITIONAL_MLAT_CONFIG"
+    )
+    for env in $ENVS
+    do
+        echo "$(grep "$env=" $FILE)"
+    done
+}
+
+print_env
