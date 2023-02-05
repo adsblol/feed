@@ -5,14 +5,14 @@
 
 We are always looking for new contributors. Our code is open source and we welcome pull requests ([See todo](https://adsb.lol/todo))
 
-This includes the [infrastructure](https://github.com/adsblol/infra), [API](https://github.com/adsblol/api) and [history](httprs://github.com/adsblol/history) services.
+This includes the [infrastructure](https://github.com/adsblol/infra), [API](https://github.com/adsblol/api) and [history](https://github.com/adsblol/history) services.
 
 The adsb.lol feed client is a toolkit that allows you to install, run and maintain a ADS-B / UAT / MLAT / ACARS / VDL2 feed client.
 
 It is built with ease of use in mind. It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-like system.
 
 ## Quick Start
-Run this on **as root** a fresh install of Raspberry Pi OS Lite or similar
+Run this **as root** on a fresh install of Raspberry Pi OS Lite or similar
 
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init)
@@ -47,7 +47,12 @@ Then, run:
 ```
 adsblol-debug && adsblol-up
 ```
-<http://IP:8080/> to confirm that readsb is working, <http://IP:8082/> to confirm that the adsblol multifeeder is working.
+Let's check if everything is working:
+
+- [ ] <http://IP:8080> (readsb)
+- [ ] <http://IP:8082> (adsblol)
+- [ ] <https://adsb.lol> (ADSB)
+- [ ] <https://map.adsb.lol> (MLAT)
 
 ## Usage
 
