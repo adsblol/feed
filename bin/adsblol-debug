@@ -2,10 +2,8 @@
 set -e
 cd /opt/adsblol
 
-
 function check_for_docker() {
-    if ! command -v docker &> /dev/null
-    then
+    if ! command -v docker &>/dev/null; then
         echo "[ fail] Docker could not be found. Please install docker."
         echo "[ run] adsblol-init"
         return 1
@@ -13,15 +11,13 @@ function check_for_docker() {
 }
 
 function check_containerd_running() {
-    if ! systemctl is-active --quiet containerd
-    then
+    if ! systemctl is-active --quiet containerd; then
         echo "[ fail] Containerd is not running. Trying to start containerd..."
         echo "[>run] systemctl start containerd"
         systemctl stop containerd || true
         systemctl start containerd
         # Check if it is now running
-        if ! systemctl is-active --quiet containerd
-        then
+        if ! systemctl is-active --quiet containerd; then
             echo "[ fail] Containerd is still not running. Please start containerd."
             return 1
         fi
@@ -29,15 +25,13 @@ function check_containerd_running() {
 }
 
 function check_docker_running() {
-    if ! systemctl is-active --quiet docker
-    then
+    if ! systemctl is-active --quiet docker; then
         echo "[ fail] Docker is not running. Trying to start docker.."
         echo "[>run] systemctl start docker"
         systemctl stop docker || true
         systemctl start docker
         # Check if it is now running
-        if ! systemctl is-active --quiet docker
-        then
+        if ! systemctl is-active --quiet docker; then
             echo "[ fail] Docker is still not running. Please start docker."
             return 1
         fi
@@ -45,23 +39,21 @@ function check_docker_running() {
 }
 
 function check_for_sdr() {
-    if ! command -v rtl_test &> /dev/null
-    then
+    if ! command -v rtl_test &>/dev/null; then
         echo "[ fail] RTL-SDR could not be found. Please install rtl-sdr."
         echo "[ run] adsblol-init"
         return 1
     fi
 }
 
-function check_for_required_env_vars(){
+function check_for_required_env_vars() {
     FAILED=0
     REQUIRED_ENV_VARS=(
         "FEEDER_LAT" "FEEDER_LONG" "FEEDER_TZ"
         "MLAT_SITE_NAME" "ADSB_DONGLE_SERIAL"
         "READSB_NET_CONNECTOR" "MLATHUB_NET_CONNECTOR"
     )
-    for var in "${REQUIRED_ENV_VARS[@]}"
-    do
+    for var in "${REQUIRED_ENV_VARS[@]}"; do
         # Check if the variable is missing from /opt/adsblol/.env
         if ! grep -q "^$var=" /opt/adsblol/.env; then
             echo "[ fail] $var is missing in /opt/adsblol/.env"
@@ -79,7 +71,7 @@ function check_for_required_env_vars(){
     return $FAILED
 }
 
-function check_for_unchanged_default_vars(){
+function check_for_unchanged_default_vars() {
     FAILED=0
     if grep -q "^FEEDER_ALT_M=dd$" /opt/adsblol/.env; then
         echo "[ fail] FEEDER_ALT_M is set to the default value of dd. Please set it to your altitude in meters."
@@ -98,21 +90,19 @@ function check_for_unchanged_default_vars(){
     return $FAILED
 }
 
-function check_for_required_files(){
+function check_for_required_files() {
     REQUIRED_FILES=(
         "services.txt" "docker-compose.yaml" ".env"
     )
-    for file in "${REQUIRED_FILES[@]}"
-    do
+    for file in "${REQUIRED_FILES[@]}"; do
         # Check if it is set, non empty (and uncommented) on /opt/adsblol/.env
-        if ! [ -f "/opt/adsblol/$file" ]
-        then
+        if ! [ -f "/opt/adsblol/$file" ]; then
             echo "[ fail] $file is missing in /opt/adsblol/"
         fi
     done
 }
 
-function check_env_format(){
+function check_env_format() {
     # Wrong: READSB_ADDITIONAL_NET_CONNECTOR=feed.adsb.one,64004,beast_reduce_out,feed.theairtraffic.com,30004,beast_reduce_out
     # Right: READSB_ADDITIONAL_NET_CONNECTOR=feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out
     #check if "out," is in the string
@@ -123,7 +113,7 @@ function check_env_format(){
     fi
 }
 
-function run_checks(){
+function run_checks() {
     FAILED=0
     check_for_docker || FAILED=1
     check_containerd_running || FAILED=1
