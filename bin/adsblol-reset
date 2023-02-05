@@ -1,0 +1,5 @@
+#!/bin/bash
+set -ex
+cd /opt/adsblol
+git fetch --all
+git reset --hard origin/main
