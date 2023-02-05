@@ -74,7 +74,7 @@ two community aggregators we actively work with to share data.
 ### Run
 
 ```
-adsblol-env set READSB_ADDITIONAL_NET_CONNECTOR "feed.adsb.one,64004,beast_reduce_plus_out;feed.theairtraffic.com,30004,beast_reduce_plus_out"
+adsblol-env set READSB_ADDITIONAL_NET_CONNECTOR "feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
 adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.one,64006,39001,-privacy true;feed.theairtraffic.com,31090,39002,-privacy true"
 adsblol-env set MLAT_MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
 ```
