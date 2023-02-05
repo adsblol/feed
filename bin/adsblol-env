@@ -23,8 +23,14 @@ function set_env() {
         echo "[ warn] $2 is empty. If you want to unset it, use adsblol-env unset $2"
         exit 1
     fi
+
     # Check if variable is already in the file
     if grep -q "^$2=" /opt/adsblol/.env; then
+        # Check if it is already set to this value
+        if grep -q "^$2=$3" /opt/adsblol/.env; then
+            echo "[ info] $2 is already set to $3"
+            exit 0
+        fi
         echo "[ info] $2 is currently set to $(grep $2 /opt/adsblol/.env | cut -d "=" -f 2)"
         # If it is, replace it
         sed -i "s/^$2=.*/$2=$3/" /opt/adsblol/.env
