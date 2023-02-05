@@ -13,7 +13,7 @@ tar1090
 autoheal
 watchtower
 vnstat
-
+#code-server
 
 # 978Hz UAT
 #dump978

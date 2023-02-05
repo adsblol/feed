@@ -57,12 +57,11 @@ done
 # SDR
 curl -sL -o /etc/udev/rules.d/rtl-sdr.rules https://raw.githubusercontent.com/wiedehopf/adsb-scripts/master/osmocom-rtl-sdr.rules
 BLOCKED_MODULES="rtl2832 dvb_usb_rtl28xxu rtl2832_sdr rtl8xxxu rtl2838"
-for module in BLOCKED_MODULES;
-do
+for module in BLOCKED_MODULES; do
     if grep -q $module /etc/modprobe.d/blacklist.conf; then
         echo "[debug] $module already blacklisted"
     else
-        echo "blacklist $module" >> /etc/modprobe.d/blacklist.conf
+        echo "blacklist $module" >>/etc/modprobe.d/blacklist.conf
         rmmod $module || true
         echo "[debug] $module blacklisted"
     fi
@@ -100,7 +99,7 @@ else
 
     # Create default docker config
     mkdir -p /etc/docker
-    cat << EOF > /etc/docker/daemon.json
+    cat <<EOF >/etc/docker/daemon.json
 {
     "default-runtime": "crun",
     "runtimes": {
@@ -153,7 +152,8 @@ mkdir -p /opt/adsblol/data/readsb/collectd \
     /opt/adsblol/data/rtlsdr-airband \
     /opt/adsblol/data/acarshub \
     /opt/adsblol/data/webproxy \
-    /opt/adsblol/data/vnstat
+    /opt/adsblol/data/vnstat \
+    /opt/adsblol/data/code-server
 
 chmod +x /usr/bin/containerd || true
 systemctl enable --now containerd || true

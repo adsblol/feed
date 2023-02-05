@@ -616,3 +616,25 @@ services:
       - WATCHTOWER_ROLLING_RESTART=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+# vscode
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    profiles:
+      - code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${FEEDER_TZ}
+      - PASSWORD=${ADSBLOL_VSCODE_PASSWORD:-adsblol123}
+      - HASHED_PASSWORD=${ADSBLOL_VSCODE_HASHED_PASSWORD} #optional
+      - SUDO_PASSWORD=${ADSBLOL_VSCODE_SUDO_PASSWORD} #optional
+      - SUDO_PASSWORD_HASH=${ADSBLOL_VSCODE_PASSWORD_HASH} #optional
+      - DEFAULT_WORKSPACE=/config/workspace #optional
+    volumes:
+      - /opt/adsblol/data/code-server:/config
+      - /:/host
+    ports:
+      - 8443:8443
+    restart: unless-stopped
