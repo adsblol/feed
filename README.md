@@ -18,11 +18,30 @@ Run this on **as root** a fresh install of Raspberry Pi OS Lite or similar
 bash <(curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init)
 cd /opt/adsblol/
 cp .env.example .env
-nano .env
 ```
 
-Then, edit the `.env` file to your liking.
+Then, set the environment variables.
 
+You can either edit the `.env` file, or run `adsblol-env set <key> <value>`
+
+```
+# Altitude in meters
+adsblol-env set FEEDER_ALT_M 542
+# Latitude
+adsblol-env set FEEDER_LAT 98.76543
+# Longitude
+adsblol-env set FEEDER_LONG 12.34567
+# Timezone (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+adsblol-env set FEEDER_TZ America/New_York
+# SDR Serial Number
+adsblol-env set ADSB_DONGLE_SERIAL 1090
+# Site name
+adsblol-env set MLAT_SITE_NAME "My epic site"
+```
+
+These are the minimum environment variables you need to set.
+
+Then, run:
 ```
 adsblol-debug && adsblol-up
 ```
