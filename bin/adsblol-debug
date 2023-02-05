@@ -146,6 +146,14 @@ function check_for_old_envs() {
     done
 }
 
+function check_beast_in_mlat_config() {
+    # If there is a beast connection in the mlat config, it will not work
+    # Check if 'beast' is in the same line as '^ADSBLOL_ADDITIONAL_MLAT_CONFIG=
+    if grep -q "^ADSBLOL_ADDITIONAL_MLAT_CONFIG=.*,beast_.*" /opt/adsblol/.env; then
+        echo "[ fail] ADSBLOL_ADDITIONAL_MLAT_CONFIG is set to a beast connection. Please remove it."
+        return 1
+    fi
+}
 function run_checks() {
     FAILED=0
     check_for_docker || FAILED=1
@@ -157,6 +165,7 @@ function run_checks() {
     check_env_format || FAILED=1
     check_for_unchanged_default_vars || FAILED=1
     check_for_old_envs || FAILED=1
+    check_beast_in_mlat_config || FAILED=1
 
     # If any of the checks failed, exit with 1
     if [ $FAILED -eq 1 ]; then
