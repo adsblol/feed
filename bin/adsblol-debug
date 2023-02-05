@@ -88,7 +88,16 @@ function check_for_required_files(){
     done
 }
 
-
+function check_env_format(){
+    # Wrong: READSB_ADDITIONAL_NET_CONNECTOR=feed.adsb.one,64004,beast_reduce_out,feed.theairtraffic.com,30004,beast_reduce_out
+    # Right: READSB_ADDITIONAL_NET_CONNECTOR=feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out
+    #check if "out," is in the string
+    if grep -q "out," /opt/adsblol/.env; then
+        echo "[ fail] READSB_ADDITIONAL_NET_CONNECTOR is in the wrong format. Please use ; instead of ,"
+        echo "[ fail] Example: READSB_ADDITIONAL_NET_CONNECTOR=feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
+        return 1
+    fi
+}
 
 function run_checks(){
     FAILED=0
@@ -98,6 +107,7 @@ function run_checks(){
     check_for_sdr || FAILED=1
     check_for_required_env_vars || FAILED=1
     check_for_required_files || FAILED=1
+    check_env_format || FAILED=1
 
     # If any of the checks failed, exit with 1
     if [ $FAILED -eq 1 ]; then
