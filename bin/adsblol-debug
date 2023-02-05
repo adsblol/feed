@@ -131,6 +131,16 @@ function check_for_old_envs() {
         NEW_ENV=$(echo $env | cut -d= -f2)
         if grep -q "^$OLD_ENV=" /opt/adsblol/.env; then
             echo "[ fail] $OLD_ENV is deprecated. Please use $NEW_ENV instead."
+            # if it is ADSBLOL_MLAT_PRIVACY, suggest:
+            if [ "$OLD_ENV" = "ADSBLOL_MLAT_PRIVACY" ]; then
+                echo "[ fail] If you would like to keep privacy mode on (does not appear on map.adsb.lol)"
+                echo "[ fail] You can run:"
+                echo "[  run] adsblol-env unset ADSBLOL_MLAT_PRIVACY"
+                echo "[  run] adsblol-env set ADSBLOL_MLAT_CONFIG=--privacy"
+                echo "[ else]"
+                echo "[ fail] If you would like to turn privacy mode off (appears on map.adsb.lol)"
+                echo "[  run] adsblol-env unset ADSBLOL_MLAT_CONFIG"
+            fi
             return 1
         fi
     done
