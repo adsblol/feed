@@ -58,10 +58,10 @@ if [ "$1" == "set" ] || [ "$1" == "change" ] || [ "$1" == "edit" ] || [ "$1" == 
     set_env "$@"
 fi
 
-# If argument is empty
-if [ -z "$1" ]; then
+function usage() {
     echo "[ info] Usage:"
     echo "[ info]   adsblol-env list"
     echo "[ info]   adsblol-env set <variable> <value>"
     exit 1
-fi
+}
+usage

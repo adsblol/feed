@@ -64,11 +64,10 @@ if [ "$1" == "disable" ]; then
     exit 0
 fi
 
-# If no arguments, print usage
-if [ -z "$1" ]; then
+function usage() {
     echo "[ info] Usage:"
     echo "[ info]   adsblol-service list (list enabled services)"
     echo "[ info]   adsblol-service enable <service> (enable a service)"
     echo "[ info]   adsblol-service disable <service> (disable a service)"
-    exit 1
-fi
+}
+usage

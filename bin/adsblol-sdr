@@ -16,18 +16,21 @@ function dockerppm() {
 
 if [ "$1" == "dockertest" ]; then
     dockertest
+    exit 0
 elif [ "$1" == "dockerppm" ]; then
     dockerppm
+    exit 0
 elif [ "$1" == "test" ]; then
     test
+    exit 0
 fi
 
-# If empty,
-if [ -z "$1" ]; then
+function usage() {
     echo "Usage: adsblol-sdr <command>"
     echo "Commands:"
     echo "  dockertest - Run rtl_test in docker container"
     echo "  dockerppm - Run estimate_rtlsdr_ppm.sh in docker container"
     echo "  test - Run rtl_test on host"
     exit 1
-fi
+}
+usage
