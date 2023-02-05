@@ -12,7 +12,7 @@ function print_env(){
     )
     for env in "${ENVS[@]}"
     do
-        echo "$(grep "$env=" $FILE)"
+        echo "$(grep "$env" $FILE)"
     done
 }
 
