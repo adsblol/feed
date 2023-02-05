@@ -52,7 +52,7 @@ fi
 
 # If argument = set, change, edit, replace, modify, update:
 if [ "$1" == "set" ] || [ "$1" == "change" ] || [ "$1" == "edit" ] || [ "$1" == "replace" ] || [ "$1" == "modify" ] || [ "$1" == "update" ]; then
-    if [ $# -ne 2 ]; then
+    if [ $# -ne 3 ]; then
         echo "Usage: adsblol-env $1 <variable> <value>"
         exit 1
     fi
@@ -62,7 +62,7 @@ fi
 
 # If argument = unset, remove, delete, clear:
 if [ "$1" == "unset" ] || [ "$1" == "remove" ] || [ "$1" == "delete" ] || [ "$1" == "clear" ]; then
-    if [ $# -ne 1 ]; then
+    if [ $# -ne 2 ]; then
         echo "Usage: adsblol-env $1 <variable>"
         exit 1
     fi
