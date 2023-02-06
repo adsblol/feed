@@ -17,9 +17,6 @@ echo "[ info] Removing old docker stack if it exists"
 docker-compose --log-level ERROR $CMD down || true
 docker-compose --log-level ERROR $CMD rm -f || true
 
-echo "[ info] Pulling latest images"
-docker-compose --log-level ERROR $CMD pull || true
-
 echo "[ info] Running docker-compose up with /opt/adsblol/cmdline.txt"
 exec docker-compose --log-level ERROR $CMD up -d
 

@@ -46,19 +46,31 @@ function disable_service() {
 
 # check if the container with name $service is running / stopped / missing and if it is healthy
 function check_service() {
-    if docker ps -a --format '{{.Names}}' | grep -q "^$1$"; then
-        if docker ps --format '{{.Names}}' | grep -q "^$1$"; then
-            if docker inspect --format='{{.State.Health.Status}}' $1 | grep -q "healthy"; then
-                printf "healthy"
-            else
-                printf "unhealthy"
-            fi
-        else
-            printf "stopped"
-        fi
-    else
+    # check if container named $1 does not exist
+    if ! docker ps -a --format "{{.Names}}" | grep -q "^$1$"; then
         printf "missing"
+        return
     fi
+    # check if container named $1 is stopped
+    if docker ps -a --format "{{.Names}}" | grep -q "^$1$" && ! docker ps --format "{{.Names}}" | grep -q "^$1$"; then
+        printf "stopped"
+        return
+    fi
+    # check if container named $1 is running
+    if docker ps --format "{{.Names}}" | grep -q "^$1$"; then
+        printf "running"
+        # Check if there is a .State.Health field in the output of docker inspect
+        if docker inspect $1 | grep -q '"Health":'; then
+            # Check if the .State.Health.Status field is healthy
+            if docker inspect $1 | grep -q '"Status": "healthy"'; then
+                printf " (healthy)"
+            else
+                printf " (unhealthy)"
+            fi
+        fi
+        return
+    fi
+
 }
 
 # If argument = list,
