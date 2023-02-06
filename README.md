@@ -115,6 +115,17 @@ To update, run `adsblol-update`
 
 Running `adsblol-debug` will tell you about common mistakes.
 
+### I cannot find myself on the MLAT Map
+
+adsb.lol enables the `--privacy` flag for your MLAT client by default.
+This hides you from the MLAT map.
+
+Do you want to appear on the map? Then run:
+
+```
+adsblol-env unset ADSBLOL_MLAT_CONFIG && adsblol-up
+```
+
 ### Logs
 
 - `adsblol-logs` - view logs
