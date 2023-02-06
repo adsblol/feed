@@ -313,8 +313,6 @@ services:
     container_name: tar1090
     hostname: tar1090
     restart: always
-    depends_on:
-      - readsb
     labels:
       - "autoheal=true"
     environment:
