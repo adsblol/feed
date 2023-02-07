@@ -35,7 +35,7 @@ adsblol-env set FEEDER_LONG 12.34567
 adsblol-env set FEEDER_TZ America/New_York
 # SDR Serial Number
 adsblol-env set ADSB_DONGLE_SERIAL 1090
-# Site name
+# Site name (shows up on the MLAT map!)
 adsblol-env set MLAT_SITE_NAME "My epic site"
 # Would you like to appear on map.adsb.lol? Then set this:
 adsblol-env unset ADSBLOL_MLAT_CONFIG
