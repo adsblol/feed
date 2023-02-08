@@ -154,6 +154,22 @@ function check_beast_in_mlat_config() {
         return 1
     fi
 }
+
+function check_altitude() {
+    # Check if altitude is set to a number
+    if ! grep -q "^FEEDER_ALT_M=[0-9]*$" /opt/adsblol/.env; then
+        echo "[ fail] FEEDER_ALT_M is not set to a number. Please set it to your altitude in meters."
+        return 1
+    fi
+}
+function check_altitude_ft() {
+    # Check if FEEDER_ALT_FT exists, as it is not supported, error!
+    if grep -q "^FEEDER_ALT_FT=[0-9]*$" /opt/adsblol/.env; then
+        echo "[ fail] FEEDER_ALT_FT is set. Please remove it, as it is not supported."
+        echo "[ fail] Please set your altitude in meters in FEEDER_ALT_M."
+        return 1
+    fi
+}
 function run_checks() {
     FAILED=0
     check_for_docker || FAILED=1
@@ -166,6 +182,8 @@ function run_checks() {
     check_for_unchanged_default_vars || FAILED=1
     check_for_old_envs || FAILED=1
     check_beast_in_mlat_config || FAILED=1
+    check_altitude || FAILED=1
+    check_altitude_ft || FAILED=1
 
     # If any of the checks failed, exit with 1
     if [ $FAILED -eq 1 ]; then
