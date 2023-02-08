@@ -1,6 +1,5 @@
 # adsb.lol / feed
 
-
 [adsb.lol](https://adsb.lol) is an open-source, community-driven ADS-B / UAT / MLAT feed aggregator.
 
 We are always looking for new contributors. Our code is open source and we welcome pull requests ([See todo](https://adsb.lol/todo))
@@ -11,8 +10,19 @@ The adsb.lol feed client is a toolkit that allows you to install, run and mainta
 
 It is built with ease of use in mind. It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-like system.
 
+## Thank you SDR-Enthusiasts!
+
+This would not be possible without [SDR-Enthusiasts](https://github.com/sdr-enthusiasts/) who have made [the original docker-compose](https://github.com/sdr-enthusiasts/docker-install) file. 
+
+This repo is largely based off of their work plus some command line interface tools to make running the stack a bit simpler.
+
+[Their documentation can be very useful in enabling extra feeders.](https://sdr-enthusiasts.gitbook.io/ads-b/feeder-containers/feeding-flightaware-piaware).
+
 ## Quick Start
-Run this **as root** on a fresh install of Raspberry Pi OS Lite or similar
+
+Run this **as root** on a fresh install of Raspberry Pi OS Lite or similar.
+
+This script gets all the requirements for your system.
 
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init)
