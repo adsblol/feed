@@ -4,12 +4,12 @@
 # This file is based on the above.
 version: '3.8'
 services:
-######################################################################################################################################
-# ADS-B/UAT Data Processing Services. These containers read data from dongles and/or other containers and decode or process this data.
-# Containers include:
-# readsb
-# dump978
-# mlathub
+  ######################################################################################################################################
+  # ADS-B/UAT Data Processing Services. These containers read data from dongles and/or other containers and decode or process this data.
+  # Containers include:
+  # readsb
+  # dump978
+  # mlathub
 
 
   readsb:
@@ -56,11 +56,10 @@ services:
       - /run/readsb
       - /var/log
 
-
   dump978:
     profiles:
       - dump978
-# dump978 gets UAT data from the SDR
+    # dump978 gets UAT data from the SDR
     image: ghcr.io/sdr-enthusiasts/docker-dump978
     container_name: dump978
     hostname: dump978
@@ -108,18 +107,17 @@ services:
     tmpfs:
       - /run/readsb
 
-
-######################################################################################################################################
-# ADS-B Feeder Services. These containers feed ADS-B/UAT data to aggregator services.
-# Containers include:
-# adsblol (multifeeder)
-# piaware (FlightAware)
-# fr24 (FlightRadar24)
-# pfclient (Planefinder)
-# rbfeeder (RadarBox)
-# radarvirtuel (RadarVirtuel)
-# planewatch (Plane.Watch)
-# ADSBHub (ADSB Hub)
+  ######################################################################################################################################
+  # ADS-B Feeder Services. These containers feed ADS-B/UAT data to aggregator services.
+  # Containers include:
+  # adsblol (multifeeder)
+  # piaware (FlightAware)
+  # fr24 (FlightRadar24)
+  # pfclient (Planefinder)
+  # rbfeeder (RadarBox)
+  # radarvirtuel (RadarVirtuel)
+  # planewatch (Plane.Watch)
+  # ADSBHub (ADSB Hub)
 
   adsblol:
     image: ghcr.io/sdr-enthusiasts/docker-multifeeder@sha256:20b751d0512107872413511a9c86b1720f7606e46358b670c5ad9b1ede54fe61
@@ -143,7 +141,7 @@ services:
       - /var/log
 
   piaware:
-# piaware feeds ADS-B and UAT data (from readsb) to FlightAware. It also includes a GUI Radar website and a status website
+    # piaware feeds ADS-B and UAT data (from readsb) to FlightAware. It also includes a GUI Radar website and a status website
     image: ghcr.io/sdr-enthusiasts/docker-piaware
     profiles:
       - piaware
@@ -167,11 +165,10 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-
   fr24:
-# fr24 feeds ADS-B and UAT data (from readsb) to FlightRadar24. It also includes a status website. Please be careful
-# not to expose the status website to the internet as users may be able to start/stop/change the service from there.
-# Also note that FR24 has requested NOT to enable MLAT for those station that feed to multiple services; as such, it's commented out.
+    # fr24 feeds ADS-B and UAT data (from readsb) to FlightRadar24. It also includes a status website. Please be careful
+    # not to expose the status website to the internet as users may be able to start/stop/change the service from there.
+    # Also note that FR24 has requested NOT to enable MLAT for those station that feed to multiple services; as such, it's commented out.
     image: ghcr.io/sdr-enthusiasts/docker-flightradar24
     profiles:
       - fr24
@@ -188,12 +185,12 @@ services:
       - BEASTHOST=readsb
       - TZ=${FEEDER_TZ}
       - FR24KEY=${FR24_SHARING_KEY}
-#      - MLAT=yes
+    #      - MLAT=yes
     tmpfs:
       - /var/log
 
   pfclient:
-# pfclient feeds ADS-B and UAT data (from readsb) to Plane Finder. It also includes a GUI Radar website and a status website
+    # pfclient feeds ADS-B and UAT data (from readsb) to Plane Finder. It also includes a GUI Radar website and a status website
     image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest
     profiles:
       - pfclient
@@ -209,7 +206,7 @@ services:
       - SHARECODE=${PLANEFINDER_SHARECODE}
 
   rbfeeder:
-# rbfeeder feeds ADS-B and UAT data (from readsb) to RadarBox.
+    # rbfeeder feeds ADS-B and UAT data (from readsb) to RadarBox.
     image: ghcr.io/sdr-enthusiasts/docker-radarbox
     profiles:
       - rbfeeder
@@ -231,9 +228,8 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-
   radarvirtuel:
-# radarvirtuel feeds ADS-B and UAT data (from readsb) to RadarVirtuel.
+    # radarvirtuel feeds ADS-B and UAT data (from readsb) to RadarVirtuel.
     image: ghcr.io/sdr-enthusiasts/docker-radarvirtuel
     profiles:
       - radarvirtuel
@@ -260,7 +256,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
 
   planewatch:
-# planewatch feeds ADS-B and UAT data (from readsb) to Plane.Watch.
+    # planewatch feeds ADS-B and UAT data (from readsb) to Plane.Watch.
     image: planewatch/plane-watch
     profiles:
       - planewatch
@@ -283,9 +279,8 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-
   adsbhub:
-# adsbhub feeds ADS-B and UAT data (from readsb) to ADSB Hub.
+    # adsbhub feeds ADS-B and UAT data (from readsb) to ADSB Hub.
     image: ghcr.io/sdr-enthusiasts/docker-adsbhub
     profiles:
       - adsbhub
@@ -296,13 +291,12 @@ services:
       - SBSHOST=readsb
       - CLIENTKEY=${ADSBHUB_STATION_KEY}
 
-
-######################################################################################################################################
-# ADS-B Visualization Services. These containers create pretty web pages from ADSB/UAT data that your station receives.
-# Containers include:
-# tar1090 (most people's preferred "radar" application
-# planefence (monitor planes nearby your station and planes from a "special" watchlist)
-# screenshot (auxilary container used with planefence -- only runs well on Pi4)
+  ######################################################################################################################################
+  # ADS-B Visualization Services. These containers create pretty web pages from ADSB/UAT data that your station receives.
+  # Containers include:
+  # tar1090 (most people's preferred "radar" application
+  # planefence (monitor planes nearby your station and planes from a "special" watchlist)
+  # screenshot (auxilary container used with planefence -- only runs well on Pi4)
 
   tar1090:
     image: ghcr.io/sdr-enthusiasts/docker-tar1090
@@ -334,12 +328,13 @@ services:
     volumes:
       - "/opt/adsblol/data/tar1090/globe_history:/var/globe_history"
       - "/opt/adsblol/data/tar1090/timelapse1090:/var/timelapse1090"
+      - "/opt/adsblol/data/tar1090/collectd:/var/lib/collectd"
     tmpfs:
       - /run:exec,size=64M
       - /var/log
 
   planefence:
-# Note - after initial startup, please edit /opt/adsblol/data/planefence/config/planefence.config. Then restart this container.
+    # Note - after initial startup, please edit /opt/adsblol/data/planefence/config/planefence.config. Then restart this container.
     image: kx1t/planefence:dev
     profiles:
       - planefence
@@ -358,7 +353,6 @@ services:
     tmpfs:
       - /run:rw,nosuid,nodev,exec,relatime,size=256M
       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
-
 
   screenshot:
     image: tedder42/browser-screenshot-service
@@ -379,11 +373,10 @@ services:
     ports:
       - 5042:5042
 
-
-######################################################################################################################################
-# Additional aircraft related containers: airband
-# This container allows listening to Airband radio and feeding this data to RadarBox. It also creates a local Icecast station you can
-# listen to.
+  ######################################################################################################################################
+  # Additional aircraft related containers: airband
+  # This container allows listening to Airband radio and feeding this data to RadarBox. It also creates a local Icecast station you can
+  # listen to.
 
   airband:
     image: fredclausen/rtlsdrairband
@@ -397,19 +390,19 @@ services:
       - 8000:8000
     environment:
       - RTLSDRAIRBAND_CUSTOMCONFIG=true
-#      - ICECAST_CUSTOMCONFIG=true
+    #      - ICECAST_CUSTOMCONFIG=true
     volumes:
       - /opt/adsblol/data/rtlsdr-airband:/run/rtlsdr-airband
 
-######################################################################################################################################
-# Additional aircraft related containers: ACARS/VDLM
-# With these containers, you can receive and look at ACARS and VDL-M2 messages and feed those to ariframes.io.
-# Note that the plane.watch container is also set up to forward these messages.
-# The set consists of the following containers:
-# acarsdec: receives and decodes ACARS data from a dedicated RTL-SDR dongle
-# dumpvdl2: receives and decodes VDL-M2 data from a dedicated RTL-SDR dongle
-# acars_router: functions as an aggregator/distributor of the received ACARS and VDL-M2 data
-# acarshub: visualization tool for ACARS and VDL-M2 data
+  ######################################################################################################################################
+  # Additional aircraft related containers: ACARS/VDLM
+  # With these containers, you can receive and look at ACARS and VDL-M2 messages and feed those to ariframes.io.
+  # Note that the plane.watch container is also set up to forward these messages.
+  # The set consists of the following containers:
+  # acarsdec: receives and decodes ACARS data from a dedicated RTL-SDR dongle
+  # dumpvdl2: receives and decodes VDL-M2 data from a dedicated RTL-SDR dongle
+  # acars_router: functions as an aggregator/distributor of the received ACARS and VDL-M2 data
+  # acarshub: visualization tool for ACARS and VDL-M2 data
 
   acarsdec:
     image: ghcr.io/sdr-enthusiasts/docker-acarsdec:latest
@@ -466,10 +459,10 @@ services:
       - AR_SEND_UDP_VDLM2=acarshub:5555
       - AR_SEND_TCP_VDLM2=feed.acars.io:5553
       - AR_RECV_ZMQ_VDLM2=dumpvdl2:45555
-#      - AR_VERBOSITY=1
+    #      - AR_VERBOSITY=1
     ports:
-     - 15550:15550
-     - 15555:15555
+      - 15550:15550
+      - 15555:15555
     tmpfs:
       - /run:exec,size=64M
       - /var/log
@@ -497,13 +490,12 @@ services:
       - /run:exec,size=64M
       - /var/log
 
-
-######################################################################################################################################
-# WebProxy translates unfriendly URLs like http://x.x.x.x:8091 into friendly URLs like http://x.x.x.x/acarshub
-# It also provides GeoIP filtering and Bot Filtering
-# Although it's possible (and easy) to add SSL connectivity for websites that are exposed to the Internet,
-# the setup below doesn't include this.
-# Additionally, you can host your own web pages in this directory: /opt/adsblol/data/webproxy/html
+  ######################################################################################################################################
+  # WebProxy translates unfriendly URLs like http://x.x.x.x:8091 into friendly URLs like http://x.x.x.x/acarshub
+  # It also provides GeoIP filtering and Bot Filtering
+  # Although it's possible (and easy) to add SSL connectivity for websites that are exposed to the Internet,
+  # the setup below doesn't include this.
+  # Additionally, you can host your own web pages in this directory: /opt/adsblol/data/webproxy/html
 
   webproxy:
     image: kx1t/webproxy:dev
@@ -513,58 +505,31 @@ services:
     hostname: webproxy
     restart: always
     ports:
-       - 80:80
-       - 443:443
+      - 80:80
+      - 443:443
     environment:
-       - AUTOGENERATE=ON
-       - VERBOSELOG=ON
-       - GEOIP_DEFAULT=ALLOW
-       - GEOIP_COUNTRIES=RU,CN,BY
-       - GEOIP_RESPONSECODE=418
-       - REVPROXY=
-            readsb|http://${MY_HOST}:8080,
-            graphs|http://${MY_HOST}:8080/graphs,
-            stats|http://${MY_HOST}:8080/graphs,
-            radar|http://${MY_HOST}:8080/radar,
-            piaware|http://${MY_HOST}:8081,
-            piaware-stats|http://${MY_HOST}:8088,
-            tar1090|http://${MY_HOST}:8082,
-            planefence|http://${MY_HOST}:8083,
-            plane-alert|http://${MY_HOST}:8083/plane-alert,
-            vnstat|http://${MY_HOST}:8685,
-            planefinder|http://${MY_HOST}:8084,ajax|http://${MY_HOST}:8084/ajax,assets|http://${MY_HOST}:8084/assets,
-            vrs|http://${MY_HOST}/VirtualRadar,
-            fam|http://${MY_HOST}:8090,
-            acarshub|http://${MY_HOST}:8091
-       - REDIRECT=
-            /skyaware|/piaware,
-            /fr24|http://$$host:8754,
-            /planefinder/logs.html|http://$$host:8084/logs.html,
-            /airband|http://$$host:8000
-       - SSL=DISABLED
-       - BLOCKBOT=
-            bot,LieBaoFast,UCBrowser,MQQBrowser,Mb2345Browser,
-            google,bing,yandex,msnbot,
-            AltaVista,Googlebot,Slurp,BlackWidow,Bot,ChinaClaw,Custo,DISCo,Download,Demon,eCatch,EirGrabber,EmailSiphon,EmailWolf,SuperHTTP,Surfbot,WebWhacker,
-            Express,WebPictures,ExtractorPro,EyeNetIE,FlashGet,GetRight,GetWeb!,Go!Zilla,Go-Ahead-Got-It,GrabNet,Grafula,HMView,Go!Zilla,Go-Ahead-Got-It,
-            rafula,HMView,HTTrack,Stripper,Sucker,Indy,InterGET,Ninja,JetCar,Spider,larbin,LeechFTP,Downloader,tool,Navroad,NearSite,NetAnts,tAkeOut,WWWOFFLE,
-            GrabNet,NetSpider,Vampire,NetZIP,Octopus,Offline,PageGrabber,Foto,pavuk,pcBrowser,RealDownload,ReGet,SiteSnagger,SmartDownload,SuperBot,WebSpider,
-            Teleport,VoidEYE,Collector,WebAuto,WebCopier,WebFetch,WebGo,WebLeacher,WebReaper,WebSauger,eXtractor,Quester,WebStripper,WebZIP,Wget,Widow,Zeus,
-            Twengabot,htmlparser,libwww,Python,perl,urllib,scan,email,PycURL,Pyth,PyQ,WebCollector,WebCopy,webcraw,PetalBot,ubermetrics,Firefox/45,
-            Vert.x-WebClient,jsonlite,rv:45.0,Nexgate Ruby Client,scoop.it,NetSystemsResearch,Barkrowler,Python-Requests
-       - BLOCKBOT_RESPONSECODE=402
+      - AUTOGENERATE=ON
+      - VERBOSELOG=ON
+      - GEOIP_DEFAULT=ALLOW
+      - GEOIP_COUNTRIES=RU,CN,BY
+      - GEOIP_RESPONSECODE=418
+      - REVPROXY= readsb|http://${MY_HOST}:8080, graphs|http://${MY_HOST}:8080/graphs, stats|http://${MY_HOST}:8080/graphs, radar|http://${MY_HOST}:8080/radar, piaware|http://${MY_HOST}:8081, piaware-stats|http://${MY_HOST}:8088, tar1090|http://${MY_HOST}:8082, planefence|http://${MY_HOST}:8083, plane-alert|http://${MY_HOST}:8083/plane-alert, vnstat|http://${MY_HOST}:8685, planefinder|http://${MY_HOST}:8084,ajax|http://${MY_HOST}:8084/ajax,assets|http://${MY_HOST}:8084/assets, vrs|http://${MY_HOST}/VirtualRadar, fam|http://${MY_HOST}:8090, acarshub|http://${MY_HOST}:8091
+      - REDIRECT= /skyaware|/piaware, /fr24|http://$$host:8754, /planefinder/logs.html|http://$$host:8084/logs.html, /airband|http://$$host:8000
+      - SSL=DISABLED
+      - BLOCKBOT= bot,LieBaoFast,UCBrowser,MQQBrowser,Mb2345Browser, google,bing,yandex,msnbot, AltaVista,Googlebot,Slurp,BlackWidow,Bot,ChinaClaw,Custo,DISCo,Download,Demon,eCatch,EirGrabber,EmailSiphon,EmailWolf,SuperHTTP,Surfbot,WebWhacker, Express,WebPictures,ExtractorPro,EyeNetIE,FlashGet,GetRight,GetWeb!,Go!Zilla,Go-Ahead-Got-It,GrabNet,Grafula,HMView,Go!Zilla,Go-Ahead-Got-It, rafula,HMView,HTTrack,Stripper,Sucker,Indy,InterGET,Ninja,JetCar,Spider,larbin,LeechFTP,Downloader,tool,Navroad,NearSite,NetAnts,tAkeOut,WWWOFFLE, GrabNet,NetSpider,Vampire,NetZIP,Octopus,Offline,PageGrabber,Foto,pavuk,pcBrowser,RealDownload,ReGet,SiteSnagger,SmartDownload,SuperBot,WebSpider, Teleport,VoidEYE,Collector,WebAuto,WebCopier,WebFetch,WebGo,WebLeacher,WebReaper,WebSauger,eXtractor,Quester,WebStripper,WebZIP,Wget,Widow,Zeus, Twengabot,htmlparser,libwww,Python,perl,urllib,scan,email,PycURL,Pyth,PyQ,WebCollector,WebCopy,webcraw,PetalBot,ubermetrics,Firefox/45, Vert.x-WebClient,jsonlite,rv:45.0,Nexgate Ruby Client,scoop.it,NetSystemsResearch,Barkrowler,Python-Requests
+      - BLOCKBOT_RESPONSECODE=402
     tmpfs:
-       - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
+      - /tmp:rw,nosuid,nodev,noexec,relatime,size=128M
     volumes:
-       - /opt/adsblol/data/webproxy:/run/nginx
-       - "/etc/localtime:/etc/localtime:ro"
-       - "/etc/timezone:/etc/timezone:ro"
+      - /opt/adsblol/data/webproxy:/run/nginx
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
 
-######################################################################################################################################
-# Finally, a few "maintenance" containers that keep the rest of the stack healthy and up to date:
-# vnstat: shows network usage on a per interface (global and per container) basis
-# autoheal: restarts containers when they are deemed "unhealthy"
-# watchtower: checks every 24 hours for new versions of the containers, and downloads/installs/starts them
+  ######################################################################################################################################
+  # Finally, a few "maintenance" containers that keep the rest of the stack healthy and up to date:
+  # vnstat: shows network usage on a per interface (global and per container) basis
+  # autoheal: restarts containers when they are deemed "unhealthy"
+  # watchtower: checks every 24 hours for new versions of the containers, and downloads/installs/starts them
 
   vnstat:
     profiles:
@@ -573,20 +538,20 @@ services:
     container_name: vnstat
     network_mode: "host"
     ports:
-       - 8685:8685
+      - 8685:8685
     volumes:
-       - /etc/localtime:/etc/localtime:ro
-       - /etc/timezone:/etc/timezone:ro
-       - /opt/adsblol/data/vnstat:/var/lib/vnstat
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /opt/adsblol/data/vnstat:/var/lib/vnstat
     environment:
-       - HTTP_PORT=8685
-       - HTTP_BIND=*
-       - HTTP_LOG=/dev/stdout
-       - LARGE_FONTS=1
-       - CACHE_TIME=1
-       - RATE_UNIT=0
-       - PAGE_REFRESH=0
-       - SERVER_NAME="ADSB Station IO Stats"
+      - HTTP_PORT=8685
+      - HTTP_BIND=*
+      - HTTP_LOG=/dev/stdout
+      - LARGE_FONTS=1
+      - CACHE_TIME=1
+      - RATE_UNIT=0
+      - PAGE_REFRESH=0
+      - SERVER_NAME="ADSB Station IO Stats"
 
   autoheal:
     profiles:
@@ -615,7 +580,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-# vscode
+  # vscode
   code-server:
     image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
