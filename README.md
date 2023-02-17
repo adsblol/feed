@@ -1,15 +1,12 @@
 # adsb.lol / feed
 
-[adsb.lol](https://adsb.lol) is an open-source, community-driven ADS-B / UAT / MLAT feed aggregator.
-
-We are always looking for new contributors. Our code is open source and we welcome pull requests ([See todo](https://adsb.lol/todo))
-
-This includes the [infrastructure](https://github.com/adsblol/infra), [API](https://github.com/adsblol/api) and [history](https://github.com/adsblol/history) services.
-
 The adsb.lol feed client is a toolkit that allows you to install, run and maintain a ADS-B / UAT / MLAT / ACARS / VDL2 feed client.
 
-It is built with ease of use in mind. It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-like system.
+By default, it feeds MLAT+ADSB to adsb.lol. You can enable UAT/ACARS/VDL2, and feed to your plane data to FlightRadar24, Radarbox, Piaware, [and more](.env.example)
 
+It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-like system.
+
+With [a few commands](#feeding-to-other-aggregators), you can easily feed to other community aggregators.
 
 ## Quick Start
 
