@@ -8,6 +8,10 @@ It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-l
 
 With [a few commands](#feeding-to-other-aggregators), you can easily feed to other community aggregators.
 
+## ADSBExchange-style feeder
+
+If you are looking for a script similar to the ADSBExchange feeder to run on your existing station, [you can see here](https://github.com/adsblol/feed/tree/master).
+
 ## Quick Start
 
 Run this **as root** on a fresh install of Raspberry Pi OS Lite or similar.
