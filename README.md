@@ -1,31 +1,9 @@
 # adsb.lol feed client
 ## ADSB.lol is an [open source](https://github.com/adsblol/infra) ADSB+MLAT aggregator.
 
-Would you like to set up Docker? [Take a look at the SDR-Enthusiasts GitBook](https://sdr-enthusiasts.gitbook.io/ads-b/setting-up-the-host-system/install-docker) for installing Docker, then use the [`docker-compose.yaml`](docker-compose.yaml) in this repository at the [project environment](https://sdr-enthusiasts.gitbook.io/ads-b/foundations/prepare-the-project-environment) stage.
+**Proceed at your own caution. While the scripts below are known to work, there might be pitfalls and unforeseen issues. The [maintained adsb.lol feed client](https://adsb.lol/feed) is recommended.**
 
-The included docker-compose is preconfigured with [sdr-enthusiasts](https://github.com/sdr-enthusiasts/) images.
-
-The included docker-compose talks to adsb.lol (ADSB+MLAT) by default, but supports (by uncommenting the lines):
-
-- adsb.one (ADSB+MLAT)
-- theairtraffic.com (ADSB, MLAT is not yet supported by the website.)
-- adsb.fi (ADSB+MLAT)
-- piaware 
-- flightradar24 
-- radarbox 
-- planefinder 
-- planewatch
-- adsbhub
-- opensky
-
-To ensure your docker-compose stack is always up, a little utility such as [dcsg - docker compose service generator](https://github.com/andreaskoch/dcsg) can come in handy.
-
-## Enough with the Docker, show me the BASH!
-
-**Proceed at your own caution. While the scripts below are known to work, there might be pitfalls and unforeseen issues. Docker is recommended.**
-
-
-- These scripts aid in setting up your current ADS-B receiver to feed adsb.lol and others!
+- These scripts aid in setting up your current ADS-B receiver to feed adsb.lol
 - They will not disrupt any existing feed clients already present
 
 ## 1: Find coordinates / elevation:
