@@ -56,6 +56,47 @@ services:
       - /run/readsb
       - /var/log
 
+
+  readsb_net:
+    profiles:
+      - readsb_net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    image: ghcr.io/sdr-enthusiasts/docker-readsb-protobuf
+    container_name: readsb_net
+    hostname: readsb
+    restart: always
+    labels:
+      - "autoheal=true"
+    ports:
+      - 8080:8080
+      - 30002:30002
+      - 30003:30003
+    environment:
+      - TZ=${FEEDER_TZ}
+      - READSB_DCFILTER=true
+      - READSB_FIX=true
+      - READSB_LAT=${FEEDER_LAT}
+      - READSB_LON=${FEEDER_LONG}
+      - READSB_RX_LOCATION_ACCURACY=2
+      - READSB_MODEAC=true
+      - READSB_STATS_RANGE=true
+      - READSB_NET_ONLY=true
+      - READSB_NET_SBS_OUTPUT_PORT=30003
+      - READSB_NET_BEAST_OUTPUT_PORT=30005
+      - READSB_NET_RAW_OUTPUT_PORT=30002
+      - READSB_NET_CONNECTOR=${READSBNET_NET_CONNECTOR}
+      - READSB_NET_BEAST_REDUCE_OUT_PORT=30105
+      - READSB_GRAPH_MAX_MESSAGES_LINE=1
+      - READSB_GRAPH_ALL_LARGE=yes
+      - READSB_EXTRA_ARGS=api-port,8080;debug,nS
+    volumes:
+      - /opt/adsblol/data/readsb/collectd:/run/collectd
+      - /opt/adsblol/data/readsb/autogain:/run/autogain
+    tmpfs:
+      - /run/readsb
+      - /var/log
+
   dump978:
     profiles:
       - dump978

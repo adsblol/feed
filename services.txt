@@ -42,3 +42,11 @@ vnstat
 # Planefence logs aircraft in "fence" near your station, displayed on website/CSV files, sends Tweets and soon to measure noise levels.
 #screenshot
 # Planefence needs the screenshot service.
+
+# -----
+# Extra containers
+# -----
+
+#readsb_net
+# readsb_net is used instead of readsb to connect to a locally running readsb / dump1090-fa / dump1090-mutability.
+# It is mutually exclusive with readsb.
