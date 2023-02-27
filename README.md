@@ -73,7 +73,7 @@ If you have an issue with the feed client, please [paste.ee](https://paste.ee) y
 The `adsblol` service can feed to other aggregators.
 
 In this example, we feed [adsb.one](https://adsb.one) and [theairtraffic.com](https://theairtraffic.com),
-two community aggregators we actively work with to share data.
+two community aggregators you might want to consider sharing your data with.
 
 ### Run
 
