@@ -2,5 +2,12 @@
 set -ex
 cd /opt/adsblol
 git fetch --all
+# Move services.txt to services.txt.bak
+# This is because we don't want to update the services.txt file
+# when we update the adsblol repo
+DATE=$(date +%Y-%m-%d-%H-%M-%S)
+BACKUP_FILE="/opt/adsblol/data/services.txt.$DATE.bak"
+mv services.txt $BACKUP_FILE
 git pull --ff-only
+mv $BACKUP_FILE services.txt
 adsblol-init
