@@ -18,8 +18,10 @@ Run this **as root** on a fresh install of Raspberry Pi OS Lite or similar.
 
 This script gets all the requirements for your system.
 
+**For your own security,** Please consider [analysing](https://github.com/adsblol/feed/blob/main/bin/adsblol-init) the `adsblol-init` script which you are about to run on your system.
+
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init)
+curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init | sudo bash
 cd /opt/adsblol/
 cp .env.example .env
 ```
