@@ -16,6 +16,8 @@ if [ ! $(id -u) = 0 ]; then
     exit 1
 fi
 
+apt-get update && apt-get -y upgrade
+
 REQS="git jq bridge-utils rtl-sdr iptables wget"
 # Check if we have REQ, if not, install them
 for REQ in $REQS; do
