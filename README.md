@@ -21,7 +21,7 @@ This script gets all the requirements for your system.
 **For your own security,** Please consider [analysing](https://github.com/adsblol/feed/blob/main/bin/adsblol-init) the `adsblol-init` script which you are about to run on your system.
 
 ```
-curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init | sudo bash
+curl -Ls https://raw.githubusercontent.com/adsblol/feed/main/bin/adsblol-init | bash
 cd /opt/adsblol/
 cp .env.example .env
 ```
