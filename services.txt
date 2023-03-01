@@ -18,7 +18,11 @@ vnstat
 # 978Hz UAT
 #dump978
 
-# Commercial feeders
+# -----
+# Additional feeders
+# -----
+#multifeeder
+# ^ Necessary to feed to other similar aggregators.
 
 #piaware
 #fr24
