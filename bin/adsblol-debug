@@ -52,7 +52,6 @@ function check_for_required_env_vars() {
         "FEEDER_LAT" "FEEDER_LONG" "FEEDER_TZ"
         "MLAT_SITE_NAME" "ADSB_DONGLE_SERIAL"
         "READSB_NET_CONNECTOR" "MLATHUB_NET_CONNECTOR"
-        "ADSBLOL_UUID"
     )
     for var in "${REQUIRED_ENV_VARS[@]}"; do
         # Check if it exists and not empty, then return with 0
@@ -171,22 +170,6 @@ function check_altitude_ft() {
         return 1
     fi
 }
-
-function check_multifeeder_should_be_enabled() {
-    # Due to splitting up adsblol and multifeeder,
-    # we need to check if multifeeder should be enabled.
-    # If ADSBLOL_ADDITIONAL_NET_CONNECTOR is not empty, it should be enabled.
-    if grep -q "^ADSBLOL_ADDITIONAL_NET_CONNECTOR=.*" /opt/adsblol/.env; then
-        echo "[ fail] ADSBLOL_ADDITIONAL_NET_CONNECTOR is set, but multifeeder is not enabled."
-        echo "[ fail] Recently, multifeeder was split out of adsblol."
-
-        echo "[ info] Automatically enabling multifeeder for you in 10 seconds to give you time to read this."
-        echo "[ info] I will run: adsblol-service enable multifeeder"
-        sleep 10
-        adsblol-service enable multifeeder
-    fi
-}
-
 function run_checks() {
     FAILED=0
     check_for_docker || FAILED=1
@@ -201,7 +184,6 @@ function run_checks() {
     check_beast_in_mlat_config || FAILED=1
     check_altitude || FAILED=1
     check_altitude_ft || FAILED=1
-    check_multifeeder_should_be_enabled || FAILED=1
 
     # If any of the checks failed, exit with 1
     if [ $FAILED -eq 1 ]; then

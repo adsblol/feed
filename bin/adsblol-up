@@ -10,14 +10,6 @@ if [ ! -f /opt/adsblol/cmdline.txt ]; then
     source /opt/adsblol/bin/adsblol-gen
 fi
 
-# If ADSBLOL_UUID is not set, or empty, in /opt/adsblol/.env, get it from the API
-if ! grep -q "^ADSBLOL_UUID=.*-.*$" /opt/adsblol/.env; then
-    echo "[ info] No UUID found. Getting..."
-    VERSION=$(git rev-parse --short HEAD)
-    UUID=$(curl -sL -X POST -H "Content-Type: application/json" -d '{"version": "$VERSION"}' https://api.adsb.lol/api/0/uuid | jq -r '.uuid')
-    adsblol-env set ADSBLOL_UUID "$UUID"
-fi
-
 # Get the cmd from /opt/adsblol/cmdline.txt
 CMD=$(cat /opt/adsblol/cmdline.txt)
 

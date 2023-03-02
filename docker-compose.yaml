@@ -70,6 +70,8 @@ services:
       - "autoheal=true"
     ports:
       - 8080:8080
+      - 30002:30002
+      - 30003:30003
     environment:
       - TZ=${FEEDER_TZ}
       - READSB_DCFILTER=true
@@ -149,8 +151,7 @@ services:
   ######################################################################################################################################
   # ADS-B Feeder Services. These containers feed ADS-B/UAT data to aggregator services.
   # Containers include:
-  # adsblol (to feed to adsblol)
-  # multifeeder (to feed to multiple services)
+  # adsblol (multifeeder)
   # piaware (FlightAware)
   # fr24 (FlightRadar24)
   # pfclient (Planefinder)
@@ -160,7 +161,7 @@ services:
   # ADSBHub (ADSB Hub)
 
   adsblol:
-    image: ghcr.io/sdr-enthusiasts/docker-multifeeder
+    image: ghcr.io/sdr-enthusiasts/docker-multifeeder@sha256:20b751d0512107872413511a9c86b1720f7606e46358b670c5ad9b1ede54fe61
     profiles:
       - adsblol
     depends_on:
@@ -170,30 +171,8 @@ services:
     restart: always
     environment:
       - TZ=${FEEDER_TZ}
-      - READSB_NET_CONNECTOR=readsb,30105,beast_in;feed.adsb.lol,1337,beast_reduce_plus_out
-      - MLAT_CONFIG=feed.adsb.lol,1338,39000,${ADSBLOL_MLAT_CONFIG}
-      - MLAT_USER=${MLAT_SITE_NAME}
-      - READSB_LAT=${FEEDER_LAT}
-      - READSB_LON=${FEEDER_LONG}
-      - READSB_ALT=${FEEDER_ALT_M}m
-      - UUID=${ADSBLOL_UUID}
-    tmpfs:
-      - /run/readsb
-      - /var/log
-
-  multifeeder:
-    image: ghcr.io/sdr-enthusiasts/docker-multifeeder
-    profiles:
-      - multifeeder
-    depends_on:
-      - readsb
-    container_name: multifeeder
-    hostname: multifeeder
-    restart: always
-    environment:
-      - TZ=${FEEDER_TZ}
-      - READSB_NET_CONNECTOR=readsb,30105,beast_in;${ADSBLOL_ADDITIONAL_NET_CONNECTOR}
-      - MLAT_CONFIG=${ADSBLOL_ADDITIONAL_MLAT_CONFIG}
+      - READSB_NET_CONNECTOR=readsb,30105,beast_in;feed.adsb.lol,1337,beast_reduce_out;${ADSBLOL_ADDITIONAL_NET_CONNECTOR}
+      - MLAT_CONFIG=feed.adsb.lol,1338,39000,${ADSBLOL_MLAT_CONFIG};${ADSBLOL_ADDITIONAL_MLAT_CONFIG}
       - MLAT_USER=${MLAT_SITE_NAME}
       - READSB_LAT=${FEEDER_LAT}
       - READSB_LON=${FEEDER_LONG}
