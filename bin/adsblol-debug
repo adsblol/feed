@@ -170,6 +170,27 @@ function check_altitude_ft() {
         return 1
     fi
 }
+
+function check_adsb_sdr_serial_exists(){
+    # We want to check if ADSB_DONGLE_SERIAL is set to a serial number that exists
+    RTL_SERIALS=$(rtl_test -d99999 2>&1 | grep -o "SN:.*" | sed 's/SN: //')
+    if [ -z "$RTL_SERIALS" ]; then
+        echo "[ fail] No RTL-SDR dongles found. Please connect one and try again."
+        return 1
+    fi
+    ADSB_DONGLE_SERIAL=$(grep "^ADSB_DONGLE_SERIAL=" /opt/adsblol/.env | cut -d= -f2)
+    if ! echo "$RTL_SERIALS" | grep -q "$ADSB_DONGLE_SERIAL"; then
+        echo "[ fail] ADSB_DONGLE_SERIAL is set to $ADSB_DONGLE_SERIAL, but no RTL-SDR dongle with that serial number was found."
+        echo "[ info] Your available dongles are:"
+        for serial in $RTL_SERIALS; do
+            echo "[ info] Serial: $serial"
+            echo "[  run] adsblol-env set ADSB_DONGLE_SERIAL $serial"
+        done
+        echo "[ info] If you would like to use a different dongle, please run one of the above commands to set the dongle serial."
+        return 1
+    fi
+    return 0
+}
 function run_checks() {
     FAILED=0
     check_for_docker || FAILED=1
@@ -184,6 +205,7 @@ function run_checks() {
     check_beast_in_mlat_config || FAILED=1
     check_altitude || FAILED=1
     check_altitude_ft || FAILED=1
+    check_adsb_sdr_serial_exists || FAILED=1
 
     # If any of the checks failed, exit with 1
     if [ $FAILED -eq 1 ]; then
