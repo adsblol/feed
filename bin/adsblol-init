@@ -16,7 +16,11 @@ if [ ! $(id -u) = 0 ]; then
     exit 1
 fi
 
-apt-get update && apt-get -y upgrade
+# If /opt/adsblol does not exist, we first do an apt-get update and upgrade for good measure
+if [ ! -d /opt/adsblol ]; then
+    apt-get update
+    apt-get -y upgrade
+fi
 
 REQS="git jq bridge-utils rtl-sdr iptables wget"
 # Check if we have REQ, if not, install them
@@ -37,6 +41,7 @@ fi
 
 # If /opt/adsblol does not exist, we create it
 if [ ! -d /opt/adsblol ]; then
+
     echo "[debug] creating /opt/adsblol"
     git clone https://github.com/adsblol/feed /opt/adsblol
 else
