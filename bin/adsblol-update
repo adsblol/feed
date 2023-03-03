@@ -1,13 +1,24 @@
 #!/bin/bash
 set -ex
 cd /opt/adsblol
+echo "[ info] Updating adsblol repo"
 git fetch --all
 # Move services.txt to services.txt.bak
 # This is because we don't want to update the services.txt file
 # when we update the adsblol repo
 DATE=$(date +%Y-%m-%d-%H-%M-%S)
-BACKUP_FILE="/opt/adsblol/data/services.txt.$DATE.bak"
+BACKUP_FILE="/opt/adsblol/data/.services.txt.$DATE.bak"
+echo "[ info] Moving services.txt to $BACKUP_FILE"
 mv services.txt $BACKUP_FILE
+echo "[ info] Running git pull --ff-only"
 git pull --ff-only
-mv $BACKUP_FILE services.txt
+cp $BACKUP_FILE services.txt
 adsblol-init
+
+# Check if cmdline.txt exists,
+# if it does not exist, we call adsblol-gen
+if [ ! -f /opt/adsblol/cmdline.txt ]; then
+    adsblol-gen || true
+fi
+echo "[ info] Updating docker images"
+docker-compose $(cat cmdline.txt) pull
