@@ -187,6 +187,7 @@ function check_adsb_sdr_serial_exists(){
             echo "[  run] adsblol-env set ADSB_DONGLE_SERIAL $serial"
         done
         echo "[ info] If you would like to use a different dongle, please run one of the above commands to set the dongle serial."
+        echo "[ info] Then, run adsblol-up to restart the containers."
         return 1
     fi
     return 0
