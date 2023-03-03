@@ -59,9 +59,9 @@ done
 # SDR
 curl -sL -o /etc/udev/rules.d/rtl-sdr.rules https://raw.githubusercontent.com/wiedehopf/adsb-scripts/master/osmocom-rtl-sdr.rules
 BLOCKED_MODULES="rtl2832_sdr dvb_usb_rtl2832u dvb_usb_rtl28xxu dvb_usb_v2 r820t rtl2830 rtl2832 rtl2838 rtl8192cu rtl8xxxu dvb_core"
+ANY_BLACKLIST=0
 for module in BLOCKED_MODULES; do
     # Check if we blacklisted any modules
-    ANY_BLACKLIST=0
     if grep -q $module /etc/modprobe.d/blacklist.conf; then
         echo "[debug] $module already blacklisted"
     else
@@ -70,12 +70,12 @@ for module in BLOCKED_MODULES; do
         echo "[debug] $module blacklisted"
         ANY_BLACKLIST=1
     fi
-    # If we blacklisted any modules, we need to update initramfs
-    if [ $ANY_BLACKLIST = 1 ]; then
-        echo "[debug] Trying to initramfs"
-        update-initramfs -u || true
-    fi
 done
+# If we blacklisted any modules, we need to update initramfs
+if [ $ANY_BLACKLIST = 1 ]; then
+    echo "[debug] Trying to update initramfs"
+    update-initramfs -u || true
+fi
 
 # Install crun
 if [ ! -z $(which /usr/bin/crun) ]; then
