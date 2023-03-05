@@ -70,28 +70,6 @@ The `adsblol` service supports feeding to multiple aggregators.
 
 If you have an issue with the feed client, please [paste.ee](https://paste.ee) your error logs join our chat on [matrix](https://matrix.to/#/#adsblol:gatto.club) or [discord](https://adsb.lol/discord).
 
-## Feeding to other aggregators
-
-The `adsblol` service can feed to other aggregators.
-
-In this example, we feed [adsb.one](https://adsb.one) and [theairtraffic.com](https://theairtraffic.com),
-two community aggregators you might want to consider sharing your data with.
-
-### Run
-
-**NOTE:** This is using `--privacy`, which excludes you from adsb.lol map, and should exclude you from other aggregators maps too.
-
-```
-adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
-adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.one,64006,39001,--privacy;feed.theairtraffic.com,31090,39002,--privacy"
-adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
-```
-**If you would like to disable privacy mode, instead, use:**
-```
-adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsb.one,64004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
-adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.one,64006,39001;feed.theairtraffic.com,31090,39002"
-adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
-```
 
 ### Restart the stack
 
@@ -162,3 +140,30 @@ This would not be possible without [SDR-Enthusiasts](https://github.com/sdr-enth
 This repo is largely based off of their work plus some command line interface tools to make running the stack a bit simpler.
 
 [Their documentation can be very useful in enabling extra feeders.](https://sdr-enthusiasts.gitbook.io/ads-b/feeder-containers/feeding-flightaware-piaware).
+
+
+## Feeding directly to other aggregators
+
+Where possible, adsb.lol commits to share data and ingest data directly with other aggregators which are willing to license their data openly.
+
+The `adsblol` service can feed to other aggregators.
+
+In this example, we feed [theairtraffic.com](https://theairtraffic.com) and [adsb.fi](https://adsb.fi),
+two aggregators you might want to consider sharing your data with.
+
+### Run
+
+**NOTE:** This is using `--privacy`, which excludes you from adsb.lol map, and should exclude you from other aggregators maps too.
+
+```
+adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsb.fi,30004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
+adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.fi,31090,39001,--privacy;feed.theairtraffic.com,31090,39002,--privacy"
+adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
+```
+**If you would like to disable privacy mode, instead, use:**
+```
+adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsb.fi,30004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
+adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.fi,31090,39001;feed.theairtraffic.com,31090,39002"
+adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
+```
+
