@@ -32,5 +32,5 @@ exec /usr/local/share/adsblol/venv/bin/mlat-client \
     --lon "$LONGITUDE" \
     --alt "$ALTITUDE" \
     $PRIVACY \
-    $UUID_FILE \
+    --uuid-file /usr/local/share/adsblol/adsblol-uuid \
     $RESULTS $RESULTS1 $RESULTS2 $RESULTS3 $RESULTS4

@@ -33,9 +33,7 @@ exec /usr/local/share/adsblol/feed-adsblol --net --net-only --quiet \
     --net-beast-reduce-interval $REDUCE_INTERVAL \
     $TARGET $NET_OPTIONS \
     --lat "$LATITUDE" --lon "$LONGITUDE" \
-    $UUID_FILE $JSON_OPTIONS \
+    --uuid-file /usr/local/share/adsblol/adsblol-uuid \
+    $JSON_OPTIONS \
     $UAT_SOURCE \
-    $SOURCE \
-
-
-
+    $SOURCE
