@@ -12,6 +12,11 @@ With [a few commands](#feeding-to-other-aggregators), you can easily feed to oth
 
 If you are looking for a script similar to the ADSBExchange feeder to run on your existing station, [you can see here](https://github.com/adsblol/feed/tree/master).
 
+Or run:
+```
+curl -fsL -o /tmp/adsblol.sh https://adsb.lol/feed.sh && sudo bash /tmp/adsblol.sh
+```
+
 ## Quick Start
 
 Run this **as root** on a fresh install of Raspberry Pi OS Lite or similar.
