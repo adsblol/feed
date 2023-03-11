@@ -151,7 +151,7 @@ Where possible, adsb.lol commits to share data and ingest data directly with oth
 
 The `adsblol` service can feed to other aggregators.
 
-In this example, we feed [theairtraffic.com](https://theairtraffic.com) and adsb.fi](https://adsb.fi),
+In this example, we feed [theairtraffic.com](https://theairtraffic.com) and adsbfi
 two aggregators you might want to consider sharing your data with. 
 
 This is not an endorsement and adsb.lol is not affiliated with these aggregators.
