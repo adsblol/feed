@@ -6,7 +6,7 @@ By default, it feeds MLAT+ADSB to adsb.lol. You can enable UAT/ACARS/VDL2, and f
 
 It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-like system.
 
-With [a few commands](#feeding-to-other-aggregators), you can easily feed to other community aggregators.
+With [a few commands](#feeding-directly-to-other-aggregators), you can easily feed to other community aggregators.
 
 ## ADSBExchange-style feeder
 
@@ -82,8 +82,6 @@ If you have an issue with the feed client, please [paste.ee](https://paste.ee) y
 adsblol-up
 ```
 
-You can now check [adsb.one](https://adsb.one/myip) and [theairtraffic.com](https://theairtraffic.com/feed/myip/) to see if your feed is working.
-
 ## Enabling a service
 
 To enable a service, run `adsblol-service enable <service>`
@@ -153,7 +151,7 @@ Where possible, adsb.lol commits to share data and ingest data directly with oth
 
 The `adsblol` service can feed to other aggregators.
 
-In this example, we feed [theairtraffic.com](https://theairtraffic.com) and [adsb.fi](https://adsb.fi),
+In this example, we feed [theairtraffic.com](https://theairtraffic.com) and adsb.fi](https://adsb.fi),
 two aggregators you might want to consider sharing your data with. 
 
 This is not an endorsement and adsb.lol is not affiliated with these aggregators.
