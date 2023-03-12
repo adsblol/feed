@@ -1,9 +1,6 @@
 # adsb.lol feed client
-## ADSB.lol is an [open source](https://github.com/adsblol/infra) ADSB+MLAT aggregator.
 
-**Proceed at your own caution. While the scripts below are known to work, there might be pitfalls and unforeseen issues. The [maintained adsb.lol feed client](https://adsb.lol/feed) is recommended.**
-
-- These scripts aid in setting up your current ADS-B receiver to feed adsb.lol
+- These scripts aid in setting up your current ADS-B receiver to feed [adsb.lol](https://adsb.lol)
 - They will not disrupt any existing feed clients already present
 
 ## 1: Find coordinates / elevation:
