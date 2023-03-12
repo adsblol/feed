@@ -1,4 +1,4 @@
-# adsb.lol feed client
+# adsb.lol feed client classic
 
 - These scripts aid in setting up your current ADS-B receiver to feed [adsb.lol](https://adsb.lol)
 - They will not disrupt any existing feed clients already present
