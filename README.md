@@ -158,8 +158,10 @@ Where possible, adsb.lol commits to share data and ingest data directly with oth
 
 The `adsblol` service can feed to other aggregators.
 
-In this example, we feed [theairtraffic.com](https://theairtraffic.com) and adsbfi
-two aggregators you might want to consider sharing your data with. 
+In this example, we feed [theairtraffic.com](https://theairtraffic.com) and [adsbexchange.com](https://adsbexchange.com)
+two aggregators you might want to consider sharing your data with.
+
+ADSBexchange has the largest network of MLAT receivers at the time of writing, so you have the highest chance of getting local flights that you might miss as they do not transfer their location data.
 
 This is not an endorsement and adsb.lol is not affiliated with these aggregators.
 
@@ -168,14 +170,14 @@ This is not an endorsement and adsb.lol is not affiliated with these aggregators
 **NOTE:** This is using `--privacy`, which excludes you from adsb.lol map, and should exclude you from other aggregators maps too.
 
 ```
-adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsb.fi,30004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
-adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.fi,31090,39001,--privacy;feed.theairtraffic.com,31090,39002,--privacy"
+adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsbexchange.com,30004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
+adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsbexchange.com,31090,39001,--privacy;feed.theairtraffic.com,31090,39002,--privacy"
 adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
 ```
 **If you would like to disable privacy mode, instead, use:**
 ```
-adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsb.fi,30004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
-adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsb.fi,31090,39001;feed.theairtraffic.com,31090,39002"
+adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsbexchange.com,30004,beast_reduce_out;feed.theairtraffic.com,30004,beast_reduce_out"
+adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsbexchange.com,31090,39001;feed.theairtraffic.com,31090,39002"
 adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
 ```
 
