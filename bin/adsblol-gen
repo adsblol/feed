@@ -7,8 +7,14 @@ cd /opt/adsblol
 DOCKER_COMPOSE_CMD=""
 SERVICES=$(cat services.txt | grep -v "^#")
 for service in $SERVICES; do
-    DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD --profile $service"
+    # Make sure the service exists in the docker-compose
+    SERVICE=$(grep "  $service:" docker-compose.yaml || true)
+    if [ -z "$SERVICE" ]; then
+        echo "[ warn] $service exists in services.txt, does not exist in docker-compose.yaml"
+    else
+        DOCKER_COMPOSE_CMD="$DOCKER_COMPOSE_CMD --profile $service"
+    fi
 done
 
 echo "$DOCKER_COMPOSE_CMD" >/opt/adsblol/cmdline.txt
-echo "[ info] cmdline.txt: $DOCKER_COMPOSE_CMD"
+echo "[ info] docker-compose $DOCKER_COMPOSE_CMD"

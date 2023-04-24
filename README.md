@@ -97,10 +97,6 @@ This is a helper command that will edit the `services.txt` file, and run `adsblo
 
 You may have to define further environment variables in the `.env` file.
 
-Then, run `adsblol-gen` to generate a new cmdline.txt.
-
-The cmdline.txt is used by the adsblol binaries to know what services to start.
-
 Once you have done this, run `adsblol-up` to start the containers.
 
 ## Troubleshooting
@@ -145,7 +141,7 @@ adsblol-env unset ADSBLOL_MLAT_CONFIG && adsblol-up
 
 ## Thank you SDR-Enthusiasts!
 
-This would not be possible without [SDR-Enthusiasts](https://github.com/sdr-enthusiasts/) who have made [the original docker-compose](https://github.com/sdr-enthusiasts/docker-install) file. 
+This would not be possible without [SDR-Enthusiasts](https://github.com/sdr-enthusiasts/) who have made [the original docker-compose](https://github.com/sdr-enthusiasts/docker-install) file.
 
 This repo is largely based off of their work plus some command line interface tools to make running the stack a bit simpler.
 
@@ -180,4 +176,3 @@ adsblol-env set ADSBLOL_ADDITIONAL_NET_CONNECTOR "feed.adsbexchange.com,30004,be
 adsblol-env set ADSBLOL_ADDITIONAL_MLAT_CONFIG "feed.adsbexchange.com,31090,39001;feed.theairtraffic.com,31090,39002"
 adsblol-env set MLATHUB_NET_CONNECTOR "adsblol,39000,beast_in;adsblol,39001,beast_in;adsblol,39002,beast_in"
 ```
-
