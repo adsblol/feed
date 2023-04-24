@@ -3,9 +3,6 @@
 # Required containers
 # -----
 adsblol
-readsb
-mlathub
-tar1090
 
 # -----
 # Maintenance containers

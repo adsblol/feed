@@ -4,29 +4,27 @@ systemctl start containerd || true
 systemctl start docker || true
 cd /opt/adsblol
 
-# If no cmdline.txt, error and tell to run adsblol-gen
-if [ ! -f /opt/adsblol/cmdline.txt ]; then
-    # run adsblol-gen
-    source /opt/adsblol/bin/adsblol-gen
-fi
+# Update cmdline.txt based on services.txt
+source /opt/adsblol/bin/adsblol-gen
 
 # If ADSBLOL_UUID is not set, or empty, in /opt/adsblol/.env, get it from the API
 if ! grep -q "^ADSBLOL_UUID=.*-.*$" /opt/adsblol/.env; then
     echo "[ info] No UUID found. Getting..."
-    VERSION=$(git rev-parse --short HEAD)
-    UUID=$(curl -sL -X POST -H "Content-Type: application/json" -d '{"version": "$VERSION"}' https://api.adsb.lol/api/0/uuid | jq -r '.uuid')
-    adsblol-env set ADSBLOL_UUID "$UUID"
+    adsblol-env set ADSBLOL_UUID "$(cat /proc/sys/kernel/random/uuid)"
+fi
+
+# same for ULTRAFEEDER_UUID
+if ! grep -q "^ULTRAFEEDER_UUID=.*-.*$" /opt/adsblol/.env; then
+    echo "[ info] No ULTRAFEEDER_UUID found. Getting..."
+    adsblol-env set ULTRAFEEDER_UUID "$(cat /proc/sys/kernel/random/uuid)"
 fi
 
 # Get the cmd from /opt/adsblol/cmdline.txt
 CMD=$(cat /opt/adsblol/cmdline.txt)
 
-echo "[ info] Removing old docker stack if it exists"
+echo "[ info] Running docker-compose down && docker-compose rm -f"
 docker-compose --log-level ERROR $CMD down || true
 docker-compose --log-level ERROR $CMD rm -f || true
 
-echo "[ info] Running docker-compose up with /opt/adsblol/cmdline.txt"
+echo "[ info] Running docker-compose --log-level ERROR $CMD up -d"
 exec docker-compose --log-level ERROR $CMD up -d
-
-echo "[ info] Attaching to logs... You can Ctrl-C to exit"
-docker-compose $CMD logs -f
