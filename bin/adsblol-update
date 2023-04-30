@@ -7,13 +7,22 @@ git fetch --all
 # This is because we don't want to update the services.txt file
 # when we update the adsblol repo
 DATE=$(date +%Y-%m-%d-%H-%M-%S)
-mkdir -p /opt/adsblol/data
-BACKUP_FILE="/opt/adsblol/data/.services.txt.$DATE.bak"
-echo "[ info] Moving services.txt to $BACKUP_FILE"
-mv services.txt $BACKUP_FILE
+
+# Does /opt/adsblol/services.txt exist?
+if [ ! -f /opt/adsblol/services.txt ]; then
+    mkdir -p /opt/adsblol/data
+    BACKUP_FILE="/opt/adsblol/data/.services.txt.$DATE.bak"
+    echo "[ info] Moving services.txt to $BACKUP_FILE"
+    mv services.txt $BACKUP_FILE
+fi
+
 echo "[ info] Running git pull --ff-only"
 git pull --ff-only
-cp $BACKUP_FILE services.txt
+# Is BACKUP_FILE set? If it is we want to copy the file back
+if [ -n "$BACKUP_FILE" ]; then
+    echo "[ info] Copying $BACKUP_FILE to services.txt"
+    cp $BACKUP_FILE services.txt
+fi
 adsblol-init
 
 # Check if cmdline.txt exists,
