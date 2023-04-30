@@ -87,7 +87,7 @@ if [ ! -z $(which /usr/bin/crun) ]; then
     echo "crun already installed"
 else
     echo "[debug] installing crun"
-    ARCH=$(uname -m | sed 's/arm7l/armhf/' | sed 's/armv7l/armhf/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')
+    ARCH=$(uname -m | sed 's/arm7l/armhf/' | sed 's/armv7l/armhf/' | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/' | sed 's/armv6l/armhf/')
     if [ "$ARCH" = "armhf" ]; then
         wget "https://raw.githubusercontent.com/katlol/arm32/main/bin/crun" -O /usr/bin/crun
     else
@@ -103,7 +103,7 @@ if [ ! -z $(which /usr/bin/docker) ]; then
 else
     echo "[debug] installing docker"
     TMPDIR=$(mktemp -d)
-    ARCH=$(uname -m | sed 's/arm7l/armhf/' | sed 's/armv7l/armhf/' | sed 's/arm64/aarch64/')
+    ARCH=$(uname -m | sed 's/arm7l/armhf/' | sed 's/armv7l/armhf/' | sed 's/arm64/aarch64/' |  sed 's/armv6l/armhf/')
     URL="https://download.docker.com/linux/static/stable/$ARCH/docker-23.0.0.tgz"
     wget $URL -O - | tar xvz -C $TMPDIR
     mv $TMPDIR/docker/* /usr/bin
