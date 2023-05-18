@@ -1,6 +1,10 @@
 # Thanks to SDR-Enthusiasts for the base docker-compose.yml file
 # See: https://github.com/sdr-enthusiasts/docker-install/blob/main/sample-docker-compose.yml
-# License: MIT
+######################################################################################################################################
+# Copyright 2021-2023 Ramon F. Kolb (kx1t) - licensed under the terms and conditions
+# of the MIT license. The terms and conditions of this license are included with the Github
+# distribution of this package.
+######################################################################################################################################
 # This file is based on the above.
 version: '3.8'
 services:
@@ -18,8 +22,6 @@ services:
 
   adsblol:
     image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder
-    profiles:
-      - adsblol
     ports:
       - 8080:80
       - 30005:30005
