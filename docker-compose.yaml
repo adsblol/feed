@@ -59,7 +59,7 @@ services:
           adsb,feed.adsb.lol,30004,beast_reduce_plus_out,uuid=${ADSBLOL_UUID};
           mlat,feed.adsb.lol,31090,39001,uuid=${ADSBLOL_UUID},${ADSBLOL_MLAT_CONFIG}
       - READSB_NET_CONNECTOR=${ADSBLOL_ADDITIONAL_NET_CONNECTOR}
-      - MLAT_NET_CONNECTOR=${ADSBLOL_ADDITIONAL_MLAT_CONFIG}
+      - MLAT_CONFIG=${ADSBLOL_ADDITIONAL_MLAT_CONFIG}
     volumes:
       - /opt/adsblol/ultrafeeder/globe_history:/var/globe_history
       - /opt/adsblol/ultrafeeder/graphs1090:/var/lib/collectd
