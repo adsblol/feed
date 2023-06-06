@@ -61,6 +61,9 @@ services:
       - READSB_NET_CONNECTOR=${ADSBLOL_ADDITIONAL_NET_CONNECTOR}
       - MLAT_CONFIG=${ADSBLOL_ADDITIONAL_MLAT_CONFIG}
       - MLATHUB_NET_CONNECTOR=${MLATHUB_NET_CONNECTOR}
+      - MLATHUB_CONFIG=${MLATHUB_CONFIG}
+      - READSB_GAIN=${ADSB_DONGLE_GAIN}
+      - READSB_RTLSDR_PPM=${ADSB_DONGLE_PPM}
     volumes:
       - /opt/adsblol/ultrafeeder/globe_history:/var/globe_history
       - /opt/adsblol/ultrafeeder/graphs1090:/var/lib/collectd
