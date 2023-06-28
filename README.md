@@ -8,8 +8,7 @@ It is designed to be run on a Raspberry Pi, but can be run on any Linux Debian-l
 
 With a few commands, you can easily feed to other community aggregators.
 
-For an up to date version of the documentation, see [www.adsb.lol/feed/docker](https://www.adsb.lol/feed/docker/).
-
+For an up to date version of the documentation, see [www.adsb.lol/docs/get-started/docker/](https://www.adsb.lol/docs/get-started/docker/)
 ## Bare metal install
 
 If you are looking for a script to run on your existing station, [you can see here](https://github.com/adsblol/feed/tree/master).
