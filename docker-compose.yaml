@@ -353,9 +353,9 @@ services:
     restart: always
     environment:
       - TZ=${FEEDER_TZ}
-      - AR_SEND_UDP_ACARS=acarshub:5550;feed.acars.io:5550
+      - AR_SEND_UDP_ACARS=acarshub:5550;acars.in.adsb.lol:5550
       - AR_SEND_UDP_VDLM2=acarshub:5555
-      - AR_SEND_TCP_VDLM2=feed.acars.io:5553
+      - AR_SEND_TCP_VDLM2=acars.in.adsb.lol:5553
       - AR_RECV_ZMQ_VDLM2=dumpvdl2:45555
     #      - AR_VERBOSITY=1
     ports:
