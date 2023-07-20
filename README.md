@@ -22,6 +22,11 @@ Run:
 ```
 curl -fsL -o /tmp/adsblol.sh https://adsb.lol/feed.sh && sudo bash /tmp/adsblol.sh
 ```
+## Manual feeding with readsb and mlat-client
+1. First generate a UUID: `cat /proc/sys/kernel/random/uuid`
+2. Add this to your wiedehopf readsb: `--net-connector feed.adsb.lol,30004,beast_reduce_plus_out,in.adsb.lol,1337,uuid=UUID` be sure to replace UUID with your uuid.
+3. not sure what you need for mlat-client
+
 ## Thank you SDR-Enthusiasts!
 
 This would not be possible without [SDR-Enthusiasts](https://github.com/sdr-enthusiasts/) who have made [the original docker-compose](https://github.com/sdr-enthusiasts/docker-install) file.
