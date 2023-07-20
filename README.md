@@ -23,9 +23,16 @@ Run:
 curl -fsL -o /tmp/adsblol.sh https://adsb.lol/feed.sh && sudo bash /tmp/adsblol.sh
 ```
 ## Manual feeding with readsb and mlat-client
+
+You probably do not want to do this unless you really know what you are doing.
+
+Here goes...
+
 1. First generate a UUID: `cat /proc/sys/kernel/random/uuid`
 2. Add this to your wiedehopf readsb: `--net-connector feed.adsb.lol,30004,beast_reduce_plus_out,in.adsb.lol,1337,uuid=UUID` be sure to replace UUID with your uuid.
-3. not sure what you need for mlat-client
+3. Run a separate mlat-client instance:
+```/usr/bin/python3.9 /usr/bin/mlat-client --user yourname --lat 00.00000 --lon -00.00000 --alt 231m --input-type dump1090 --input-connect localhost:30005 --server feed.adsb.lol:31090 --results beast,listen,32005 --uuid=UUID --privacy```
+4. You can add the mlat results to your readsb by adding this `--net-connector localhost,32005,beast_in`
 
 ## Thank you SDR-Enthusiasts!
 
