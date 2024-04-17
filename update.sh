@@ -265,7 +265,7 @@ echo 70
 # SETUP FEEDER TO SEND DUMP1090 DATA TO adsb.lol
 
 READSB_REPO="https://github.com/wiedehopf/readsb.git"
-READSB_BRANCH="master"
+READSB_BRANCH="stale"
 if grep -E 'wheezy|jessie' /etc/os-release -qs; then
     READSB_BRANCH="jessie"
 fi
